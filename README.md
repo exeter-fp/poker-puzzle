@@ -35,6 +35,6 @@ If two players have the same ranked hands then the rank made up of the highest v
 </tr><tr><td style="vertical-align:top;"><b>5</b></td><td>&nbsp;</td><td>2H 2D 4C 4D 4S<br><div class="note">Full House<br>With Three Fours</div></td><td>&nbsp;</td><td>3C 3D 3S 9S 9D<br><div class="note">Full House<br>with Three Threes</div></td><td>&nbsp;</td><td style="vertical-align:top;">Player 1</td>
 </tr></tbody></table></div>
 
-The file, poker.txt, contains one-thousand random hands dealt to two players. Each line of the file contains ten cards (separated by a single space): the first five are Player 1's cards and the last five are Player 2's cards. You can assume that all hands are valid (no invalid characters or repeated cards), each player's hand is in no specific order, and in each hand there is a clear winner.
+The file, [poker.txt](poker.txt), contains one-thousand random hands dealt to two players. Each line of the file contains ten cards (separated by a single space): the first five are Player 1's cards and the last five are Player 2's cards. You can assume that all hands are valid (no invalid characters or repeated cards), each player's hand is in no specific order, and in each hand there is a clear winner.
 
 How many hands does Player 1 win?
