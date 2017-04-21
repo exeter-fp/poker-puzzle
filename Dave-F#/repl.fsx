@@ -76,16 +76,15 @@ module HandRecognision =
     let (|Pair|_|) = matchOfAKind 2
     let (|Three|_|) = matchOfAKind 3
     let (|Four|_|) = matchOfAKind 4
-    
-    let (|TwoPairs|_|) hand =
-        match hand |> groupByRank with
-        | (2,x)::(2,y)::_ -> Some(max x y,min x y)  // Return them with highest rank first
-        | _               -> None
 
-    let (|FullHouse|_|) hand =
-        match hand |> groupByRank with
-        | (3,x)::(2,y)::_ -> Some(x,y)
-        | _               -> None
+    let matchTwoKinds first second hand =
+        match hand |> groupByRank with 
+        | (f,x)::(s,y)::_ when f = first && s = second  -> Some(x,y)
+        | _                                             -> None
+
+    // Note here we have to make sure we order the two pairs currently
+    let (|TwoPairs|_|) =  matchTwoKinds 2 2 >> function None -> None | Some(x,y) -> Some(max x y, min x y)
+    let (|FullHouse|_|) = matchTwoKinds 3 2
 
     let (|Flush|_|) (hand:Hand) = 
         if hand |> List.map getSuit |> List.distinct |> List.length = 1 then Some () else None
