@@ -13,7 +13,9 @@
 
 open RankModel              // From above
 
+[<NoComparison>]  //  prevent Suit from being compared, in poker no suit is better than another
 type Suit = Clubs | Spades | Hearts | Diamonds
+
 type Card = Rank * Suit
 type Hand = Card List
 
