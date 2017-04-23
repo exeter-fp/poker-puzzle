@@ -47,17 +47,50 @@
             false))
         true))))
 
+(defprotocol IToHand
+  (to-hand [this]))
+
+(extend-protocol IToHand
+  Object
+  (to-hand [this] this)
+  String
+  (to-hand [this]
+    (->> (str/split this #" ")
+         (mapv
+           (fn [c]
+             (let [[rank suit] c]
+               {:rank (case rank
+                        \2 2
+                        \3 3
+                        \4 4
+                        \5 5
+                        \6 6
+                        \7 7
+                        \8 8
+                        \9 9
+                        \T 10
+                        \J :jack
+                        \Q :queen
+                        \K :king
+                        \A :ace)
+                :suit (case suit
+                        \C :clubs
+                        \D :diamonds
+                        \H :hearts
+                        \S :spades)}))))))
+
 (defn straight?
   [hand]
-  (consecutive-elements? (sort (map card-values hand))))
+  (consecutive-elements? (sort (map card-values (to-hand hand)))))
 
 (defn flush?
   [hand]
-  (= 1 (count (set (map :suit hand)))))
+  (= 1 (count (set (map :suit (to-hand hand))))))
 
 (defn score
   [hand]
-  (let [by-value (group-by card-values hand)
+  (let [hand (to-hand hand)
+        by-value (group-by card-values hand)
         with-count (fn [n card-seqs]
                      (seq (keep #(when (= n (count %)) %) card-seqs)))
         pairs (with-count 2 (vals by-value))
@@ -67,18 +100,15 @@
         four (first (with-count 4 (vals by-value)))
         straight? (straight? hand)
         flush? (flush? hand)
-        full-house? (and three pair)
-        straight-flush? (and straight? flush?)
-        royal-flush? (and flush? (= #{10 :jack :queen :king :ace} (set (map :rank hand))))
         comparable (fn [value & card-seqs]
                      [value (mapv (comp vec reverse sort (partial map card-values))
                                   card-seqs)])]
     (cond
-      royal-flush?
+      (and flush? (= #{10 :jack :queen :king :ace} (set (map :rank hand))))
       {:score      :royal-flush
        :comparable (comparable 10 hand)
        :cards      hand}
-      straight-flush?
+      (and straight? flush?)
       {:score      :straight-flush
        :comparable (comparable 9 hand)
        :cards      hand}
@@ -86,7 +116,7 @@
       {:score      :four-of-a-kind
        :comparable (comparable 8 hand)
        :cards hand}
-      full-house?
+      (and three pair)
       {:score      :full-house
        :comparable (comparable 7 three pair hand)
        :cards hand
@@ -124,37 +154,11 @@
     (compare (:comparable score1)
              (:comparable score2))))
 
-(defn str->hand
-  [s]
-  (->> (str/split s #" ")
-       (mapv
-         (fn [c]
-           (let [[rank suit] c]
-             {:rank (case rank
-                      \2 2
-                      \3 3
-                      \4 4
-                      \5 5
-                      \6 6
-                      \7 7
-                      \8 8
-                      \9 9
-                      \T 10
-                      \J :jack
-                      \Q :queen
-                      \K :king
-                      \A :ace)
-              :suit (case suit
-                      \C :clubs
-                      \D :diamonds
-                      \H :hearts
-                      \S :spades)})))))
-
 (defn solve-problem
   []
   (let [pline (fn [s]
-                [(str->hand (subs s 0 14))
-                 (str->hand (subs s 15))])]
+                [(subs s 0 14)
+                 (subs s 15)])]
     (with-open [reader (io/reader (io/resource "poker.txt"))]
       (reduce
         (fn [n line]
