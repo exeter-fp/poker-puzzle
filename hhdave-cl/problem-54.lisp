@@ -42,7 +42,7 @@
          (one-pair         (first (groups-of 2)))
          (high-card        (last hand)))))))
 
-(defun greater-score-p (a b) ; early exit could probably be eliminated
+(defun greater-score-p (a b)
   (flet ((highest-ranked-card (score)
            (reduce #'max (mapcar #'card-rank (hand-score-ranked-cards score))))
          (compare (a b)
@@ -60,4 +60,3 @@
                                      (score-hand (subseq row 5))))
                   (with-open-file (stream "./poker.txt")
                     (loop for line = (read-line stream nil) while line collect (cl-ppcre:split " " line)))))
-
