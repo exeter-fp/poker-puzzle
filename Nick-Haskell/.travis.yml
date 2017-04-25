@@ -1,0 +1,18 @@
+# from: http://chrispenner.ca/post/homebrew-haskell
+
+language: c
+sudo: false
+cache:
+  directories:
+  - $HOME/.local/bin
+  - $HOME/.stack
+os:
+- linux
+- osx
+before_install:
+- sh tools/install-stack.sh
+- sh tools/install-ghr.sh
+script:
+- cd PokerPuzzle.hsproj
+- stack setup
+- stack build
