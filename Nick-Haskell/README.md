@@ -32,7 +32,7 @@ now run it
 $ stack exec PokerPuzzle
 ```
 
-```bash
+```
 Player 1 has won 376 times
 ```
 
@@ -42,7 +42,7 @@ load in `ghci`:
 $ stack ghci --ghci-options -XOverloadedStrings
 ```
 
-```bash
+```
 GHCi, version 7.10.3: http://www.haskell.org/ghc/  :? for help
 [1 of 3] Compiling Model            ( Model.hs, interpreted )
 [2 of 3] Compiling Parsing          ( Parsing.hs, interpreted )
