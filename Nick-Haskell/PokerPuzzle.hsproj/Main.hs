@@ -13,7 +13,7 @@ main = do
   filecontent <- T.readFile "p054_poker.txt"
   let hands = map parseLine $ T.lines filecontent
   let numPlayer1Wins = length $ filter isPlayer1Winner hands 
-  let outputString = "Player has won " ++ show numPlayer1Wins ++ " times"
+  let outputString = "Player 1 has won " ++ show numPlayer1Wins ++ " times"
   putStrLn outputString
   pure $ numPlayer1Wins  
 
