@@ -39,7 +39,7 @@ Player 1 has won 376 times
 load in `ghci`:
 
 ```bash
-$ stack ghci
+$ stack ghci --ghci-options -XOverloadedStrings
 ```
 
 ```bash
@@ -53,5 +53,14 @@ Ok, modules loaded: PokerPuzzle, Model, Parsing, Main.
 λ> main
 Player 1 has won 376 times
 376
-λ> 
+λ> isPlayer1Winner $ parseLine "5H 5C 6S 7S KD 2C 3S 8S 8D TD"
+False
+λ> isPlayer1Winner $ parseLine "5D 8C 9S JS AC 2C 5C 7D 8S QH"
+True
+λ> isPlayer1Winner $ parseLine "2D 9C AS AH AC 3D 6D 7D TD QD"
+False
+λ> isPlayer1Winner $ parseLine "4D 6S 9H QH QC 3D 6D 7H QD QS"
+True
+λ> isPlayer1Winner $ parseLine "2H 2D 4C 4D 4S 3C 3D 3S 9S 9D"
+True
 ```
