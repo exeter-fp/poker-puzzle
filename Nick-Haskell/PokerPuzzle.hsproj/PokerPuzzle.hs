@@ -109,7 +109,7 @@ straightFlush hand@(Hand cards) =
 royalFlush :: Hand -> Maybe PokerResult
 royalFlush hand@(Hand cards) =
   let
-    lowestCardValue = value $ head $ cards
+    lowestCardValue = value $ head cards
     isRoyalFlush = allSameSuit hand && isStraight hand && lowestCardValue == Jack
   in
     (RoyalFlush $ cardsTuple5 cards) <$ guard isRoyalFlush

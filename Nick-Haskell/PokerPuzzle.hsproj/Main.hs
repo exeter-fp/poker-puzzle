@@ -1,4 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
 -- https://projecteuler.net/problem=54
 
 module Main where
@@ -15,5 +14,5 @@ main = do
   let numPlayer1Wins = length $ filter isPlayer1Winner hands 
   let outputString = "Player 1 has won " ++ show numPlayer1Wins ++ " times"
   putStrLn outputString
-  pure $ numPlayer1Wins  
+  pure numPlayer1Wins  
 
