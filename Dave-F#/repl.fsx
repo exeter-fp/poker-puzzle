@@ -12,7 +12,9 @@ type Rank = int         // Jack = 11, Queen = 12, King = 13, Ace = 14
 type Suit = Clubs | Spades | Hearts | Diamonds
 
 type Card = Rank * Suit
-type Hand = Card List
+type Hand = Hand of Card List   // Wrap card list in single case sum, enforce rule through shadowing constructor
+let Hand cards = match List.length cards with 5 -> Hand(cards) | _ -> failwith "Need 5 cards"
+let map f (Hand cards) = List.map f cards  
 
 // Define getter/setter for if we change the representations
 let newCard r s : Card = r,s
@@ -23,9 +25,6 @@ let rankFromInt = id
 let Ace, King, Queen, Jack, Ten = 14,13,12,11,10
 
 let rankFromDigit (d:char) : Rank = (int d) - 48
-
-// Constants for tests
-
 
 let parseHand (txt:System.String) : Hand =
     let suit = function
@@ -42,9 +41,7 @@ let parseHand (txt:System.String) : Hand =
         | 'T' -> Ten
         |  x when List.contains x ['2'..'9'] -> rankFromDigit x
         |  _  -> failwith "Invalid rank"
-    let r = txt.Split ' ' |> Array.map (fun p -> newCard (rank p.[0]) (suit p.[1] )) |> List.ofArray
-    if r.Length <> 5 then failwithf "Didn't get 5 cards: %A" r
-    r
+    txt.Split ' ' |> Array.map (fun p -> newCard (rank p.[0]) (suit p.[1] )) |> List.ofArray |> Hand
 
 // Ordering this way makes builtin comparisions work
 type Score =
@@ -65,12 +62,11 @@ module HandRecognision =
     /// Descending list of duplicates, value * count
     let groupByRank (hand:Hand) = 
         hand 
-        |> List.map getRank |> List.groupBy id 
+        |> map getRank |> List.groupBy id 
         |> List.choose (fun (r,items) -> if items.Length > 1 then Some(items.Length,r) else None) 
         |> List.sortDescending
 
-    /// Highest rank in hand
-    let highestRank hand = hand |> List.map getRank |> List.max
+    let highestRank = map getRank >> List.max
     
     /// Match numbers of a kind, partially applied below
     let matchOfAKind num hand =
@@ -92,14 +88,14 @@ module HandRecognision =
     let (|FullHouse|_|) = matchTwoKinds 3 2
 
     let (|Flush|_|) (hand:Hand) = 
-        if hand |> List.map getSuit |> List.distinct |> List.length = 1 then Some () else None
+        if hand |> map getSuit |> List.distinct |> List.length = 1 then Some () else None
 
     let (|Straight|_|) (hand:Hand) =
-        let ordered = hand |> List.map getRank |> List.sort
+        let ordered = hand |> map getRank |> List.sort
         let first = ordered.Head
         if ordered |> List.forall2 (=) [for i in 0..4 -> rankFromInt ((int first) + i) ] then
             Some (ordered |> List.last )
-        else None  // Consider: how to handle low aces, now required in puzzle but poker allows ace = 1 for straights
+        else None  // Consider: how to handle low aces, not required in this puzzle but poker allows ace = 1 for straights
 
 open HandRecognision
 let scoreHand (hand:Hand) =
@@ -119,7 +115,7 @@ let doesFirstWin f s =
     let fs, ss = scoreHand f, scoreHand s
     if fs = ss then
         // If the score is the same, we choose the highest card
-        let sorted x = x |> List.map getRank |> List.sortDescending
+        let sorted x = x |> map getRank |> List.sortDescending
         let fSorted, sSorted = sorted f, sorted s
         if fSorted = sSorted then failwith "Hand is draw" else fSorted > sSorted
     else
@@ -155,12 +151,6 @@ module Tests =
         ] |> List.iter (fun (f, s, winner) -> if winner <> (doesFirstWin (parseHand f) (parseHand s)) then failwithf "Test failed for %A" f )
 
     let doProblem54 () =
-       
-        // let downloadFile url =
-        //     use wc = new System.Net.WebClient() in wc.DownloadString(url:string)
-        // let src = downloadFile "http://projecteuler.net/project/resources/p054_poker.txt"
-        // let lines = src.Trim().Split '\n'
-        
         // Load from file
         let lines = System.IO.File.ReadAllLines("../poker.txt")
 
