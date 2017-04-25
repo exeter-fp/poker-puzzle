@@ -36,5 +36,10 @@ $ stack exec PokerPuzzle
 Player 1 has won 376 times
 ```
 
+load in `ghci`:
+
+```bash
+$ stack ghci
+```
 
 
