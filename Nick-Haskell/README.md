@@ -42,4 +42,16 @@ load in `ghci`:
 $ stack ghci
 ```
 
-
+```bash
+GHCi, version 7.10.3: http://www.haskell.org/ghc/  :? for help
+[1 of 3] Compiling Model            ( Model.hs, interpreted )
+[2 of 3] Compiling Parsing          ( Parsing.hs, interpreted )
+[3 of 3] Compiling PokerPuzzle      ( PokerPuzzle.hs, interpreted )
+Ok, modules loaded: PokerPuzzle, Model, Parsing.
+[4 of 4] Compiling Main             ( /Users/nickager/Documents/programming/poker-puzzle/Nick-Haskell/PokerPuzzle.hsproj/Main.hs, interpreted )
+Ok, modules loaded: PokerPuzzle, Model, Parsing, Main.
+λ> main
+Player 1 has won 376 times
+376
+λ> 
+```
