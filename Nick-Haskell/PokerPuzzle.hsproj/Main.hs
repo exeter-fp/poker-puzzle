@@ -12,5 +12,8 @@ import qualified Data.Text.Lazy as T
 main = do
   filecontent <- T.readFile "p054_poker.txt"
   let hands = map parseLine $ T.lines filecontent
-  pure $ length $ filter isPlayer1Winner hands  
+  let numPlayer1Wins = length $ filter isPlayer1Winner hands 
+  let outputString = "Player has won " ++ show numPlayer1Wins ++ " times"
+  putStrLn outputString
+  pure $ numPlayer1Wins  
 

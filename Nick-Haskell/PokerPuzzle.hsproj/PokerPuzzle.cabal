@@ -9,12 +9,12 @@ data-files:
 x-ghc-framework-version: 7.10.3-6.29-1
 x-last-ide-version: HfM1.4.0
 Executable PokerPuzzle
-  main-is: PokerPuzzle.hs
+  main-is: Main.hs
   buildable: True
   build-depends:
       base -any,
       text -any
   other-modules:
       Model
-      Main
+      PokerPuzzle
       Parsing
