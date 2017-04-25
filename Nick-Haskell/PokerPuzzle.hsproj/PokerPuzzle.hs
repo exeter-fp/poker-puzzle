@@ -5,15 +5,17 @@ import Data.Maybe (isJust, fromJust)
 import Control.Monad (guard)
 import Model
 
+type Kickers = [Card]
+
 data PokerResult = 
-    HighCard Card
-  | OnePair (Card, Card) [Card]
-  | TwoPairs (Card, Card) (Card, Card) Card
-  | ThreeOfAKind (Card, Card, Card) [Card]
+    HighCard Card Kickers
+  | OnePair (Card, Card) Kickers
+  | TwoPairs (Card, Card) (Card, Card) Kickers
+  | ThreeOfAKind (Card, Card, Card) Kickers
   | Straight (Card, Card, Card, Card, Card)
   | Flush (Card, Card, Card, Card, Card)
   | FullHouse (Card, Card, Card) (Card, Card)
-  | FourOfAKind (Card, Card, Card, Card) Card
+  | FourOfAKind (Card, Card, Card, Card) Kickers
   | StraightFlush (Card, Card, Card, Card, Card)
   | RoyalFlush (Card, Card, Card, Card, Card)
   deriving (Show, Eq, Ord)
@@ -50,7 +52,7 @@ cardsTuple5 [card1, card2, card3, card4, card5] = (card1, card2, card3, card4, c
 --
     
 highCard :: Hand -> PokerResult
-highCard hand = HighCard $ last $ cards hand 
+highCard (Hand cards) = HighCard (last cards) (reverse $ init cards) 
 
 onePair :: GroupedHand -> Maybe PokerResult
 onePair (GroupedHand groups) = do
@@ -64,7 +66,7 @@ twoPairs (GroupedHand groups) =
     allTwos = filter ((==2) . length) groups
     pair1 = cardsTuple2 $ allTwos !! 0
     pair2 = cardsTuple2 $ allTwos !! 1
-    otherCard = head . head $ filter ((==1) . length) groups
+    otherCard = head $ filter ((==1) . length) groups
   in
     if (length allTwos == 2) then Just (TwoPairs pair1 pair2 otherCard) else Nothing
       
@@ -95,7 +97,7 @@ fourOfAKind :: GroupedHand -> Maybe PokerResult
 fourOfAKind (GroupedHand groups) = 
   let 
     quadruplet = cardsTuple4 <$> find ((==4) . length) groups
-    otherCard = head . head $ filter ((==1) . length) groups
+    otherCard = head $ filter ((==1) . length) groups
   in
     FourOfAKind <$> quadruplet <*> pure otherCard
 
