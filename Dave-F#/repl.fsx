@@ -24,9 +24,8 @@ let getSuit = snd
 let rankFromInt = id
 let Ace, King, Queen, Jack, Ten = 14,13,12,11,10
 
-let rankFromDigit (d:char) : Rank = (int d) - 48
-
 let parseHand (txt:System.String) : Hand =
+    let rankFromDigit (d:char) : Rank = (int d) - 48
     let suit = function
         | 'H' -> Hearts
         | 'C' -> Clubs
@@ -60,17 +59,15 @@ type Score =
 module HandRecognision =
 
     /// Descending list of duplicates, value * count
-    let groupByRank (hand:Hand) = 
-        hand 
-        |> map getRank |> List.groupBy id 
-        |> List.choose (fun (r,items) -> if items.Length > 1 then Some(items.Length,r) else None) 
-        |> List.sortDescending
+    let groupByRank = 
+        map getRank >> List.groupBy id 
+        >> List.choose (fun (r,items) -> if items.Length > 1 then Some(items.Length,r) else None) 
+        >> List.sortDescending
 
     let highestRank = map getRank >> List.max
     
     /// Match numbers of a kind, partially applied below
-    let matchOfAKind num hand =
-        match hand |> groupByRank with 
+    let matchOfAKind num = groupByRank >> function
         | (count,rank)::_ when count = num  -> Some rank
         | _                                 -> None
 
@@ -78,8 +75,7 @@ module HandRecognision =
     let (|Three|_|) = matchOfAKind 3
     let (|Four|_|) = matchOfAKind 4
 
-    let matchTwoKinds first second hand =
-        match hand |> groupByRank with 
+    let matchTwoKinds first second = groupByRank >> function
         | (f,x)::(s,y)::_ when f = first && s = second  -> Some(x,y)
         | _                                             -> None
 
@@ -87,15 +83,13 @@ module HandRecognision =
     let (|TwoPairs|_|) =  matchTwoKinds 2 2 >> function None -> None | Some(x,y) -> Some(max x y, min x y)
     let (|FullHouse|_|) = matchTwoKinds 3 2
 
-    let (|Flush|_|) (hand:Hand) = 
-        if hand |> map getSuit |> List.distinct |> List.length = 1 then Some () else None
+    let (|Flush|_|) = map getSuit >> List.distinct >> List.length >> function 1 -> Some () | _ -> None
 
     let (|Straight|_|) (hand:Hand) =
         let ordered = hand |> map getRank |> List.sort
-        let first = ordered.Head
-        if ordered |> List.forall2 (=) [for i in 0..4 -> rankFromInt ((int first) + i) ] then
-            Some (ordered |> List.last )
-        else None  // Consider: how to handle low aces, not required in this puzzle but poker allows ace = 1 for straights
+        match List.forall2 (=) ordered [for i in 0..4 -> ordered.Head + i ] with
+        | true  -> ordered |> List.last |> Some
+        | false -> None // Consider: how to handle low aces, not required in this puzzle but poker allows ace = 1 for straights
 
 open HandRecognision
 let scoreHand (hand:Hand) =
@@ -115,7 +109,7 @@ let doesFirstWin f s =
     let fs, ss = scoreHand f, scoreHand s
     if fs = ss then
         // If the score is the same, we choose the highest card
-        let sorted x = x |> map getRank |> List.sortDescending
+        let sorted = map getRank >> List.sortDescending
         let fSorted, sSorted = sorted f, sorted s
         if fSorted = sSorted then failwith "Hand is draw" else fSorted > sSorted
     else
