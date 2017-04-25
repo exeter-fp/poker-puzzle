@@ -6,10 +6,10 @@ Built using [Haskell for Mac](http://haskellformac.com).
 
 The key files are:
 
-* `Model.hs`
-* `Parsing.hs`
-* `PokerPuzzle.hs` - this is where the bulk of the code lives
-* `Main.hs`
+* `[Model.hs](https://github.com/exeter-fp/poker-puzzle/blob/master/Nick-Haskell/PokerPuzzle.hsproj/Model.hs)`
+* `[Parsing.hs](https://github.com/exeter-fp/poker-puzzle/blob/master/Nick-Haskell/PokerPuzzle.hsproj/Parsing.hs)`
+* `[PokerPuzzle.hs](https://github.com/exeter-fp/poker-puzzle/blob/master/Nick-Haskell/PokerPuzzle.hsproj/PokerPuzzle.hs)` - this is where the bulk of the code lives
+* `[Main.hs](https://github.com/exeter-fp/poker-puzzle/blob/master/Nick-Haskell/PokerPuzzle.hsproj/Main.hs)`
 
 All other files are [Haskell for Mac](http://haskellformac.com) boiler-plate.
 
