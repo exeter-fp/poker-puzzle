@@ -6,12 +6,7 @@
     - Hand is a list of cards
 *)
 
-// Choose 1 of the following to represent a rank in differnt forms
-#load "rank_int.fs"        // Simple ints
-//#load "rank_enum.fs"      // Enumeration
-//#load "rank_sum.fs"       // Full DU
-
-open RankModel              // From above
+type Rank = int         // Jack = 11, Queen = 12, King = 13, Ace = 14
 
 [<NoComparison>]  //  prevent Suit from being compared, in poker no suit is better than another
 type Suit = Clubs | Spades | Hearts | Diamonds
@@ -23,6 +18,14 @@ type Hand = Card List
 let newCard r s : Card = r,s
 let getRank = fst
 let getSuit = snd
+
+let rankFromInt = id
+let Ace, King, Queen, Jack, Ten = 14,13,12,11,10
+
+let rankFromDigit (d:char) : Rank = (int d) - 48
+
+// Constants for tests
+
 
 let parseHand (txt:System.String) : Hand =
     let suit = function
@@ -172,8 +175,7 @@ module Tests =
         basics()
         scoring()
         scoreComparisons()
-        //doProblem54() = ??? |> check
-        doProblem54() |> ignore
+        doProblem54() = 376 |> check
         printfn "All tests pass"
 
 #time

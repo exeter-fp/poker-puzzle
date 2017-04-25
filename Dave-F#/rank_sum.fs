@@ -1,3 +1,0 @@
-// Card Rank represented as a sum type / discriminated unition
-
-// todo...
