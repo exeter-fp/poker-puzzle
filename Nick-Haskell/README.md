@@ -15,6 +15,9 @@ All other files are [Haskell for Mac](http://haskellformac.com) boiler-plate.
 
 From [Deploying Haskell for Mac projects on OS X and Linux](http://blog.haskellformac.com/blog/deploying-haskell-for-mac-projects-on-os-x-and-linux):
 
+1. Download a [stack binary](https://www.haskellstack.org)
+2. Execute the following shell commands:
+
 ```bash
 $ cd PokerPuzzle.hsproj
 $ stack setup --no-system-ghc
