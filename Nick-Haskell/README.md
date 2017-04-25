@@ -50,9 +50,10 @@ GHCi, version 7.10.3: http://www.haskell.org/ghc/  :? for help
 Ok, modules loaded: PokerPuzzle, Model, Parsing.
 [4 of 4] Compiling Main             ( Main.hs, interpreted )
 Ok, modules loaded: PokerPuzzle, Model, Parsing, Main.
+
 λ> main
 Player 1 has won 376 times
-376
+
 λ> isPlayer1Winner $ parseLine "5H 5C 6S 7S KD 2C 3S 8S 8D TD"
 False
 λ> isPlayer1Winner $ parseLine "5D 8C 9S JS AC 2C 5C 7D 8S QH"
