@@ -26,15 +26,15 @@ newtype GroupedHand = GroupedHand {groups :: [[Card]]}
 
 --
 
-allSameSuit :: Hand -> Bool
-allSameSuit (Hand cards) = 
+allSameSuit :: [Card] -> Bool
+allSameSuit cards = 
   let
     firstSuit = suit $ head cards
   in 
     all (\card -> suit card == firstSuit) cards
  
-isStraight :: Hand -> Bool
-isStraight (Hand cards)  = 
+isStraight :: [Card] -> Bool
+isStraight cards  = 
   let
     values = map value cards
     currentPreviousList = zip values $ tail values
@@ -79,11 +79,11 @@ threeOfAKind (GroupedHand groups) =
     ThreeOfAKind <$> triplet <*> pure remainingCards  
       
 straight :: Hand -> Maybe PokerResult
-straight hand@(Hand cards) = 
-  (Straight $ cardsTuple5 cards) <$ guard (isStraight hand)
+straight (Hand cards) = 
+  (Straight $ cardsTuple5 cards) <$ guard (isStraight cards)
     
 flush :: Hand -> Maybe PokerResult
-flush hand@(Hand cards) = (Flush $ cardsTuple5 cards) <$ guard (allSameSuit hand)
+flush (Hand cards) = (Flush $ cardsTuple5 cards) <$ guard (allSameSuit cards)
     
 fullHouse :: GroupedHand -> Maybe PokerResult
 fullHouse (GroupedHand groups) = 
@@ -102,17 +102,17 @@ fourOfAKind (GroupedHand groups) =
     FourOfAKind <$> quadruplet <*> pure otherCard
 
 straightFlush :: Hand -> Maybe PokerResult
-straightFlush hand@(Hand cards) =
+straightFlush (Hand cards) =
   let
-     isStraightFlush = allSameSuit hand && isStraight hand
+     isStraightFlush = allSameSuit cards && isStraight cards
   in
     (StraightFlush $ cardsTuple5 cards) <$ guard isStraightFlush
     
 royalFlush :: Hand -> Maybe PokerResult
-royalFlush hand@(Hand cards) =
+royalFlush (Hand cards) =
   let
     lowestCardValue = value $ head cards
-    isRoyalFlush = allSameSuit hand && isStraight hand && lowestCardValue == Jack
+    isRoyalFlush = allSameSuit cards && isStraight cards && lowestCardValue == Jack
   in
     (RoyalFlush $ cardsTuple5 cards) <$ guard isRoyalFlush
     
