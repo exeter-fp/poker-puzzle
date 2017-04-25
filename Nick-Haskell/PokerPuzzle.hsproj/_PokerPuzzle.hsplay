@@ -1,0 +1,17 @@
+-- Haskell Playground 1.0
+import Data.List
+
+succ Three
+-- succ Ace
+
+toEnum $ 4 -2 :: Value
+
+succ . succ . succ . succ $ Ten
+
+(Just (+1)) <*> (pure 4)
+
+(1,2,6,9) > (1,2,6,8)
+
+[10, 1,2] > [9, 4,5]
+
+(,,) <$> (!! 0) <*> (!! 1) <*> (!! 2) $ [1,2,3]
