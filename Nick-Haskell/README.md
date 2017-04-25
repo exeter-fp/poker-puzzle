@@ -1,3 +1,5 @@
+[![CI Status](http://img.shields.io/travis/exeter-fp/poker-puzzle.svg?style=flat)](https://travis-ci.org/exeter-fp/poker-puzzle)
+
 # Haskell solution for Project Euler Poker puzzle
 
 Built using [Haskell for Mac](http://haskellformac.com).
