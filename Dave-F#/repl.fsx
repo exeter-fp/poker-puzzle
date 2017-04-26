@@ -1,12 +1,13 @@
 (*
     Model:
-    - Suit is a sum type
-    - Rank is either a simple int, or an enumeration  (or maybe other versions if I have time)
+    - Rank is a single case union wrapping an int
+    - Suit is a union type
     - Card is a tuple of a rank and suit
-    - Hand is a list of cards
+    - Hand is a list of cards wrapped in a single case union
 *)
 
-type Rank = int         // Jack = 11, Queen = 12, King = 13, Ace = 14
+type Rank = Rank of int
+let Rank = function x when x >= 2 && x <= 14 -> Rank(x) | _ -> failwith "Invalid card rank"
 
 [<NoComparison>]  //  prevent Suit from being compared, in poker no suit is better than another
 type Suit = Clubs | Spades | Hearts | Diamonds
@@ -22,10 +23,10 @@ let getRank = fst
 let getSuit = snd
 
 let rankFromInt = id
-let Ace, King, Queen, Jack, Ten = 14,13,12,11,10
+let Ace, King, Queen, Jack, Ten = Rank 14,Rank 13, Rank 12, Rank 11,Rank 10
 
 let parseHand (txt:System.String) : Hand =
-    let rankFromDigit (d:char) : Rank = (int d) - 48
+    let rankFromDigit (d:char) = (int d) - 48
     let suit = function
         | 'H' -> Hearts
         | 'C' -> Clubs
@@ -38,7 +39,7 @@ let parseHand (txt:System.String) : Hand =
         | 'Q' -> Queen
         | 'J' -> Jack
         | 'T' -> Ten
-        |  x when List.contains x ['2'..'9'] -> rankFromDigit x
+        |  x when List.contains x ['2'..'9'] -> Rank(rankFromDigit x)
         |  _  -> failwith "Invalid rank"
     txt.Split ' ' |> Array.map (fun p -> newCard (rank p.[0]) (suit p.[1] )) |> List.ofArray |> Hand
 
@@ -87,9 +88,12 @@ module HandRecognision =
 
     let (|Straight|_|) (hand:Hand) =
         let ordered = hand |> map getRank |> List.sort
-        match List.forall2 (=) ordered [for i in 0..4 -> ordered.Head + i ] with
-        | true  -> ordered |> List.last |> Some
-        | false -> None // Consider: how to handle low aces, not required in this puzzle but poker allows ace = 1 for straights
+        if ordered.Head >= Jack then None
+        else 
+            let (Rank first) = ordered.Head
+            match List.forall2 (=) ordered [for i in 0..4 -> first + i |> Rank ] with
+            | true  -> ordered |> List.last |> Some
+            | false -> None // Consider: how to handle low aces, not required in this puzzle but poker allows ace = 1 for straights
 
 open HandRecognision
 let scoreHand (hand:Hand) =
@@ -115,52 +119,19 @@ let doesFirstWin f s =
     else
         fs > ss
 
-module Tests =
-    let check beTrue = if not beTrue then failwith "Test fail"
-    let basics() =
-        parseHand "5H 5C 6S 7S KD" |> highestRank = King |> check
-        RoyalFlush > Flush |> check
-        StraightFlush King > StraightFlush Ten |> check
+let doProblem54 () =
+    // Load from file
+    let lines = System.IO.File.ReadAllLines("../poker.txt")
 
-    let scoring () =
-        let check (test,expected) =
-            let score = test |> parseHand |> scoreHand in if score <> expected then printfn "Fail: expected %A got %A" expected score
-        [
-            "5D 8C 9S JS AC", HighCard(Ace)
-            "2C 5C 7D 8S QH", HighCard(Queen)
-            "2D 9C AS AH AC", ThreeOfKind(Ace)
-            "3D 6D 7D TD QD", Flush
-            "4D 6S 9H QH QC", OnePair(Queen)
-            "3D 6D 7H QD QS", OnePair(Queen)
-            "TH TD AC AD AS", FullHouse(Ace,Ten)
-        ] |> List.iter check
+    if lines.Length <> 1000 then failwith "Incorrect line count"
+    let processLine (input:string) =
+        let firstHand =   input.[..13]        |> parseHand
+        let secondHand =  input.[14..].Trim() |> parseHand
+        if doesFirstWin firstHand secondHand then 1 else 0
+    lines |> Array.sumBy processLine
 
-    let scoreComparisons () =
-        [
-            "5H 5C 6S 7S KD" , "2C 3S 8S 8D TD" , false
-            "5D 8C 9S JS AC" , "2C 5C 7D 8S QH" , true
-            "2D 9C AS AH AC" , "3D 6D 7D TD QD" , false
-            "4D 6S 9H QH QC" , "3D 6D 7H QD QS" , true
-            "2H 2D 4C 4D 4S" , "3C 3D 3S 9S 9D" , true
-        ] |> List.iter (fun (f, s, winner) -> if winner <> (doesFirstWin (parseHand f) (parseHand s)) then failwithf "Test failed for %A" f )
-
-    let doProblem54 () =
-        // Load from file
-        let lines = System.IO.File.ReadAllLines("../poker.txt")
-
-        if lines.Length <> 1000 then failwith "Incorrect line count"
-        let processLine (input:string) =
-            let firstHand =   input.[..13]        |> parseHand
-            let secondHand =  input.[14..].Trim() |> parseHand
-            if doesFirstWin firstHand secondHand then 1 else 0
-        lines |> Array.sumBy processLine
-
-    let run() =
-        basics()
-        scoring()
-        scoreComparisons()
-        doProblem54() = 376 |> check
-        printfn "All tests pass"
 
 #time
-Tests.run()
+match doProblem54() with
+| 376 -> printfn "Problem passed"
+|  x  -> printfn "Problem failed with score %i" x 
