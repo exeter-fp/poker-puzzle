@@ -15,3 +15,12 @@ succ . succ . succ . succ $ Ten
 [10, 1,2] > [9, 4,5]
 
 (,,) <$> (!! 0) <*> (!! 1) <*> (!! 2) $ [1,2,3]
+
+let cards1 = [Card Five Heart,Card Five Club,Card Six Spade,Card Seven Spade,Card King Diamond]
+let cards2 = [Card Two Club, Card Three Club, Card  Eight Club,Card Nine Club,Card Ten Club]
+
+allSameSuit cards1
+allSameSuit cards2
+
+allSameSuit2 cards1
+allSameSuit2 cards2
