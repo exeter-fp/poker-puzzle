@@ -8,10 +8,12 @@ import Parsing
 import qualified Data.Text.Lazy.IO as T
 import qualified Data.Text.Lazy as T
 
+import Control.Parallel.Strategies
+
 main = do
   filecontent <- T.readFile "p054_poker.txt"
   let hands = map parseLine $ T.lines filecontent
-  let numPlayer1Wins = length $ filter isPlayer1Winner hands 
+  let numPlayer1Wins = length (filter isPlayer1Winner hands `using` parList rseq)
   let outputString = "Player 1 has won " ++ show numPlayer1Wins ++ " times"
   putStrLn outputString
   pure numPlayer1Wins  

@@ -13,7 +13,8 @@ Executable PokerPuzzle
   buildable: True
   build-depends:
       base -any,
-      text -any
+      text -any,
+      parallel -any
   other-modules:
       Model
       PokerPuzzle
