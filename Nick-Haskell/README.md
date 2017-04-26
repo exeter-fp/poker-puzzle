@@ -65,3 +65,6 @@ True
 λ> isPlayer1Winner $ parseLine "2H 2D 4C 4D 4S 3C 3D 3S 9S 9D"
 True
 ```
+## Alternative Haskell implementations
+* https://wiki.haskell.org/Euler_problems/51_to_60#Problem_54
+* https://codereview.stackexchange.com/questions/110867/project-euler-problem-54-in-haskell
