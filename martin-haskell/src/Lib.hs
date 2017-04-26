@@ -98,29 +98,53 @@ sameRank (Card r _) (Card r' _ ) = r == r'
 rank :: Card -> Rank
 rank (Card r _) = r
 
+removeRanks :: [Rank] -> [Rank] -> [Rank]
+removeRanks removals = filter (`notElem` removals)
 
 -- Given a Hand, extracts the Ranks of the Cards in the Hand, in decreasing order
 sortedRanks :: Hand -> [Rank]
 sortedRanks h = rank <$> sortBy (flip compare) h
 
-
+ranksAppearingExactlyNTimes :: Int -> [Rank] -> [Rank]
+ranksAppearingExactlyNTimes n = map head . filter (\x -> length x == n) . group
 
 -- Hand Matchers for the various possible BestHands
 
 highCardMatcher :: Hand -> Maybe BestHand
 highCardMatcher h = Just $ HighCard (head $ sortedRanks h) (tail $ sortedRanks h)
 
+-- TODO: Remove duplication between this and `twoPairMatcher`, `threeOfAKindMatcher`
+-- and `fourOfAKindMatcher`
 onePairMatcher :: Hand -> Maybe BestHand
--- TODO: Complete implementation
-onePairMatcher h = Nothing
+onePairMatcher h
+    | length pairs == 1 = Just $ OnePair highRank kickers
+    | otherwise = Nothing
+    where ranks = sortedRanks h
+          pairs = ranksAppearingExactlyNTimes 2 ranks
+          highRank = head pairs
+          kickers = removeRanks [highRank] ranks
 
 twoPairsMatcher :: Hand -> Maybe BestHand
--- TODO: Complete implementation
-twoPairsMatcher h = Nothing
+twoPairsMatcher h
+    | length pairs == 2 = Just $ TwoPairs highRank lowRank kickers
+    | otherwise = Nothing
+    where ranks = sortedRanks h
+          pairs = ranksAppearingExactlyNTimes 2 ranks
+          highRank = head pairs
+          lowRank = pairs !! 1
+          kickers = removeRanks [highRank, lowRank] ranks
+
+allTriples :: [Rank] -> [Rank]
+allTriples = map head . filter (\x -> length x == 3) . group
 
 threeOfAKindMatcher :: Hand -> Maybe BestHand
--- TODO: Complete implementation
-threeOfAKindMatcher h = Nothing
+threeOfAKindMatcher h
+    | length triples == 1 = Just $ ThreeOfAKind rank kickers
+    | otherwise = Nothing
+    where ranks = sortedRanks h
+          triples = ranksAppearingExactlyNTimes 3 ranks
+          rank = head triples
+          kickers = removeRanks [rank] ranks
 
 straightMatcher :: Hand -> Maybe BestHand
 straightMatcher h
@@ -139,12 +163,17 @@ fullHouseMatcher h = do
     return $ FullHouse t p
 
 fourOfAKindMatcher :: Hand -> Maybe BestHand
--- TODO: Complete implementation
-fourOfAKindMatcher h = Nothing
+fourOfAKindMatcher h
+    | length quads == 1 = Just $ FourOfAKind rank kickers
+    | otherwise = Nothing
+    where ranks = sortedRanks h
+          quads = ranksAppearingExactlyNTimes 4 ranks
+          rank = head quads
+          kickers = removeRanks [rank] ranks
 
 straightFlushMatcher :: Hand -> Maybe BestHand
 straightFlushMatcher h = do
-    _ <- flushMatcher h
+    flushMatcher h
     Straight r <- straightMatcher h
     return $ StraightFlush r
 
