@@ -69,7 +69,7 @@ True
 * https://wiki.haskell.org/Euler_problems/51_to_60#Problem_54
 * https://codereview.stackexchange.com/questions/110867/project-euler-problem-54-in-haskell
 
-# Parallelising the solution 
+## Parallelising the solution 
 
 To make the solution run in parallel I've changed [`Main.hs`](https://github.com/exeter-fp/poker-puzzle/blob/master/Nick-Haskell/PokerPuzzle.hsproj/Main.hs) from:
 
@@ -133,7 +133,7 @@ Disappointingly I saw little difference in the performance of the parallel versi
 
 | Serial  | Parallel (-N8) |
 | ------------- | ------------- |
-|   | 0m0.139s  | 0m0.132s
+| 0m0.139s  | 0m0.132s  |
 | 0m0.117s  | 0m0.119s  |
 | 0m0.119s  | 0m0.118s  |
 | 0m0.124s  | 0m0.117s  |
