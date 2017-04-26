@@ -1,6 +1,6 @@
 module PokerPuzzle where
   
-import Data.List (sort, groupBy, find)
+import Data.List (sort, groupBy, find, nub)
 import Data.Maybe (isJust, fromJust)
 import Control.Monad (guard)
 import Model
@@ -32,6 +32,11 @@ allSameSuit cards =
     firstSuit = suit $ head cards
   in 
     all (\card -> suit card == firstSuit) cards
+    
+-- alternative implementation
+allSameSuit2 :: [Card] -> Bool
+allSameSuit2 cards = length (nub $ map suit cards) == 1 
+
  
 isStraight :: [Card] -> Bool
 isStraight cards  = 

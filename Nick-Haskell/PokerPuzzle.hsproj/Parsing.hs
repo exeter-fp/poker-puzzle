@@ -4,6 +4,7 @@ module Parsing where
 
 import Data.Text.Lazy (Text, split, unpack)
 import qualified Data.Text.Lazy as T (take, drop) 
+import Data.Char (digitToInt)
 import Model
 
 parseLine :: Text -> (Hand, Hand)
@@ -29,7 +30,7 @@ parseValue "A" = Ace
 parseValue "K" = King
 parseValue "Q" = Queen
 parseValue "J" = Jack
-parseValue valueText = toEnum $ (read $ unpack valueText) - 2 
+parseValue valueText = toEnum $ (digitToInt $ head $ unpack valueText) - 2 
     
 parseSuit :: Text -> Suit
 parseSuit "C" = Club
