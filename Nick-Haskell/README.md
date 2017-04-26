@@ -160,7 +160,7 @@ twoPairs (GroupedHand groups) =
   in 
     (TwoPairs pair1 pair2 otherCard) <$ guard (length allTwos == 2)
  ```
- The `guard` version is more idomatic, but again I think less beginner friendly.
+ The `guard` version is more idomatic, but again I think less beginner friendly. See [IRC chat alternatives to 'if..then..else'](understanding-guard.md)
  
 ### Laziness
 
