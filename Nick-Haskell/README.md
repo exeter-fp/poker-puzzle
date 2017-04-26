@@ -126,7 +126,7 @@ threeOfAKind (GroupedHand groups) =
 
 ... I think I prefer the applicative style; though I feel its less beginner friendly.
 
-### Explicit `if..then..else` verses `MonadPlus` `guard`
+### Explicit `if..then..else` verses `MonadPlus` & `guard`
 
 Compare:
 
@@ -178,7 +178,7 @@ The laziness in following snippet from `pokerResult`, means that evaluation will
       
     best = find isJust options
 ```
-In this case it won't matter much if they were all evaluated eagerly as the implementations are trivial, but in the case were the evaluations were computationally expensive laziness provides a simple elegant implementation.
+In this case it won't matter much if they were all evaluated eagerly as the implementations are trivial, but in the case were the evaluations were computationally expensive, laziness provides a simple elegant implementation.
 
 
 ## Alternative Haskell implementations
