@@ -64,7 +64,123 @@ False
 True
 λ> isPlayer1Winner $ parseLine "2H 2D 4C 4D 4S 3C 3D 3S 9S 9D"
 True
+λ> parseLine "2H 2D 4C 4D 4S 3C 3D 3S 9S 9D"
+(Hand {cards = [Card {value = Two, suit = Heart},Card {value = Two, suit = Diamond},Card {value = Four, suit = Club},Card {value = Four, suit = Diamond},Card {value = Four, suit = Spade}]},Hand {cards = [Card {value = Three, suit = Club},Card {value = Three, suit = Diamond},Card {value = Three, suit = Spade},Card {value = Nine, suit = Spade},Card {value = Nine, suit = Diamond}]})
+λ> 
 ```
+
+## Thoughts on the implementation
+
+### Making invalid states unrepresentable
+
+I use tuples to represent the cards associated with a rank so for example in `ThreeOfAKind (Card, Card, Card) Kickers`, it's clear that only three cards are relevant to the rank. Note however the type system is not enforcing that the cards have equal value so invalid states are still representable, but I'd argue its a small useful step in the right direction.
+
+### Letting `Ord` find the solution
+
+The solution is implemented as:
+
+```haskell
+isPlayer1Winner :: (Hand, Hand) -> Bool
+isPlayer1Winner (player1Hand, player2Hand) =
+  let
+     player1Result = pokerResult player1Hand
+     player2Result = pokerResult player2Hand
+  in
+    player1Result > player2Result
+```
+
+The simplicity of  `player1Result > player2Result` relies on:
+
+1) Ignoring the `Suit` when ordering cards:
+
+```haskell
+instance Ord Card where
+  (Card value1 _) `compare` (Card value2 _) = value1 `compare` value2
+```
+
+2) Including the kickers in 'PokerResult' so that if two results match the kickers are compared. Note the kickers are ordered high to low.
+
+
+### Monadic `do` verses applicative style
+I experimented with how to deal with Maybe values, first using monadic do:
+
+```haskell
+onePair :: GroupedHand -> Maybe PokerResult
+onePair (GroupedHand groups) = do 
+    pair <- find ((==2) . length) groups
+    let remainingCards = reverse $ concat $ filter (/=pair) groups
+    return $ OnePair (cardsTuple2 pair) remainingCards
+```
+
+Then similar code written in an Applicative style:
+
+```haskell
+threeOfAKind :: GroupedHand -> Maybe PokerResult
+threeOfAKind (GroupedHand groups) =
+  let 
+    triplet = cardsTuple3 <$> find ((==3) . length) groups
+    remainingCards = reverse $ concat $ filter ((/=3) . length) groups
+  in
+    ThreeOfAKind <$> triplet <*> pure remainingCards 
+```
+
+... I think I prefer the applicative style; though I feel its less beginner friendly.
+
+### Explicit `if..then..else` verses `MonadPlus` `guard`
+
+Compare:
+
+```haskell
+twoPairs :: GroupedHand -> Maybe PokerResult
+twoPairs (GroupedHand groups) = 
+  let
+    allTwos = filter ((==2) . length) groups
+    pair1 = cardsTuple2 $ allTwos !! 0
+    pair2 = cardsTuple2 $ allTwos !! 1
+    otherCard = head $ filter ((==1) . length) groups
+  in
+    if (length allTwos == 2) then Just (TwoPairs pair1 pair2 otherCard) else Nothing
+ ```
+ 
+with:
+
+```haskell
+twoPairs :: GroupedHand -> Maybe PokerResult
+twoPairs (GroupedHand groups) = 
+  let
+    allTwos = filter ((==2) . length) groups
+    pair1 = cardsTuple2 $ allTwos !! 0
+    pair2 = cardsTuple2 $ allTwos !! 1
+    otherCard = head $ filter ((==1) . length) groups
+  in 
+    (TwoPairs pair1 pair2 otherCard) <$ guard (length allTwos == 2)
+ ```
+ 
+### Laziness
+
+The implementation of `twoPairs` above relies on laziness; only if `(length allTwos == 2)` is `True` will the pairs be extracted from the array.
+
+The laziness in following snippet from `pokerResult`, means that evaluation will stop as soon as valid rank is found; all lower ranks remain unevaluated:
+
+```haskell
+    options = [
+        royalFlush sortedHand
+      , straightFlush sortedHand
+      , fourOfAKind groupedHand
+      , fullHouse groupedHand
+      , flush sortedHand
+      , straight sortedHand
+      , threeOfAKind groupedHand
+      , twoPairs groupedHand
+      , onePair groupedHand
+      , Just $ highCard sortedHand
+      ]
+      
+    best = find isJust options
+```
+In this case it won't matter much if they were all evaluated eagerly as the implementations are trivial, but in the case were the evaluations were computationally expensive laziness provides a simple elegant implementation.
+
+
 ## Alternative Haskell implementations
 * https://wiki.haskell.org/Euler_problems/51_to_60#Problem_54
 * https://codereview.stackexchange.com/questions/110867/project-euler-problem-54-in-haskell
