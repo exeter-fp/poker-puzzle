@@ -186,6 +186,8 @@ The laziness in following snippet from `pokerResult`, means that evaluation will
 ```
 In this case it won't matter much if they were all evaluated eagerly as the implementations are trivial, but in the case were the evaluations were computationally expensive, laziness provides a simple elegant implementation.
 
+### `Data.Text.Lazy.IO`
+Ensure that the file is read as needed; it doesn't load the whole of `p054_poker.txt` in memory at once.
 
 ## Alternative Haskell implementations
 * https://wiki.haskell.org/Euler_problems/51_to_60#Problem_54
