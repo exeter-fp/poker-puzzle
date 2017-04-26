@@ -69,7 +69,22 @@ True
 * https://wiki.haskell.org/Euler_problems/51_to_60#Problem_54
 * https://codereview.stackexchange.com/questions/110867/project-euler-problem-54-in-haskell
 
-# Testing parallel performance 
+# Parallelising the solution 
+
+To make the solution run in parallel I've changed [`Main.hs`](https://github.com/exeter-fp/poker-puzzle/blob/master/Nick-Haskell/PokerPuzzle.hsproj/Main.hs) from:
+
+```haskell
+   let numPlayer1Wins = length $ filter isPlayer1Winner hands
+```
+
+to:
+
+```haskell
+  let player1Wins = map (boolToInt. isPlayer1Winner) hands `using` parList rseq
+  let numPlayer1Wins = sum player1Wins
+```
+
+### Build and test the parallel version
 
 Build using the threaded runtime and turn on optimisations:
 
@@ -108,4 +123,82 @@ The run threadscope:
 
 ```bash
 $ threadscope PokerPuzzle.eventlog 
+```
+
+![](threadscope.png)
+
+### Performance comparision of the parallel vs serial solution
+
+Disappointingly I saw little difference in the performance of the parallel version verses the concurrent version:
+
+| Serial  | Parallel (-N8) |
+| ------------- | ------------- |
+|   | 0m0.139s  | 0m0.132s
+| 0m0.117s  | 0m0.119s  |
+| 0m0.119s  | 0m0.118s  |
+| 0m0.124s  | 0m0.117s  |
+| 0m0.122s  | 0m0.121s  |
+
+The diagnostics show only 10% of the overall work was run in parallel, so perhaps not surprising.
+
+#### Serial version
+
+```
+$ stack exec PokerPuzzle -- +RTS -s
+
+Player 1 has won 376 times
+      14,626,248 bytes allocated in the heap
+         559,320 bytes copied during GC
+         320,000 bytes maximum residency (2 sample(s))
+          69,624 bytes maximum slop
+               2 MB total memory in use (0 MB lost due to fragmentation)
+
+                                     Tot time (elapsed)  Avg pause  Max pause
+  Gen  0        27 colls,     0 par    0.001s   0.001s     0.0000s    0.0002s
+  Gen  1         2 colls,     0 par    0.000s   0.000s     0.0002s    0.0004s
+
+  INIT    time    0.000s  (  0.000s elapsed)
+  MUT     time    0.006s  (  0.007s elapsed)
+  GC      time    0.001s  (  0.001s elapsed)
+  EXIT    time    0.000s  (  0.000s elapsed)
+  Total   time    0.042s  (  0.008s elapsed)
+
+  %GC     time       2.1%  (13.4% elapsed)
+
+  Alloc rate    2,417,961,315 bytes per MUT second
+
+  Productivity  97.6% of total user, 520.9% of total elapsed
+```
+
+#### Parallel version
+
+```
+$ stack exec PokerPuzzle -- +RTS -N -s
+Player 1 has won 376 times
+      15,334,144 bytes allocated in the heap
+         735,264 bytes copied during GC
+         358,288 bytes maximum residency (1 sample(s))
+         139,312 bytes maximum slop
+               5 MB total memory in use (0 MB lost due to fragmentation)
+
+                                     Tot time (elapsed)  Avg pause  Max pause
+  Gen  0         5 colls,     4 par    0.002s   0.001s     0.0002s    0.0005s
+  Gen  1         1 colls,     1 par    0.001s   0.000s     0.0004s    0.0004s
+
+  Parallel GC work balance: 10.64% (serial 0%, perfect 100%)
+
+  TASKS: 18 (1 bound, 17 peak workers (17 total), using -N8)
+
+  SPARKS: 1000 (1000 converted, 0 overflowed, 0 dud, 0 GC'd, 0 fizzled)
+
+  INIT    time    0.001s  (  0.001s elapsed)
+  MUT     time    0.013s  (  0.004s elapsed)
+  GC      time    0.003s  (  0.001s elapsed)
+  EXIT    time    0.000s  (  0.000s elapsed)
+  Total   time    0.052s  (  0.006s elapsed)
+
+  Alloc rate    1,164,854,451 bytes per MUT second
+
+  Productivity  92.7% of total user, 743.6% of total elapsed
+
 ```
