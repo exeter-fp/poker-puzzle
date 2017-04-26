@@ -55,7 +55,8 @@ highCard :: Hand -> PokerResult
 highCard (Hand cards) = HighCard (last cards) (reverse $ init cards) 
 
 onePair :: GroupedHand -> Maybe PokerResult
-onePair (GroupedHand groups) = do
+onePair (GroupedHand groups) = do 
+    -- using monadic do, see threeOfAKind for applicative alternative
     pair <- find ((==2) . length) groups
     let remainingCards = reverse $ concat $ filter (/=pair) groups
     return $ OnePair (cardsTuple2 pair) remainingCards
@@ -68,6 +69,7 @@ twoPairs (GroupedHand groups) =
     pair2 = cardsTuple2 $ allTwos !! 1
     otherCard = head $ filter ((==1) . length) groups
   in
+    -- if then else, formulation; alternative using `guard` below.  
     if (length allTwos == 2) then Just (TwoPairs pair1 pair2 otherCard) else Nothing
       
 threeOfAKind :: GroupedHand -> Maybe PokerResult
@@ -121,8 +123,9 @@ royalFlush (Hand cards) =
 pokerResult :: Hand -> PokerResult
 pokerResult (Hand cardsInHand) = 
   let
-    sortedHand = Hand $ sort cardsInHand
-    groupedHand = GroupedHand $ groupBy (\card1 card2 -> value card1 == value card2) $ cards sortedHand
+    sortedCards = sort cardsInHand
+    sortedHand = Hand sortedCards
+    groupedHand = GroupedHand $ groupBy (\card1 card2 -> value card1 == value card2) $ sortedCards
     
     options = [
         royalFlush sortedHand
@@ -139,7 +142,7 @@ pokerResult (Hand cardsInHand) =
       
     best = find isJust options
   in
-    fromJust . fromJust $ best
+    fromJust $ fromJust best
     
     
 isPlayer1Winner :: (Hand, Hand) -> Bool
@@ -149,12 +152,3 @@ isPlayer1Winner (player1Hand, player2Hand) =
      player2Result = pokerResult player2Hand
   in
     player1Result > player2Result
-
-
-
-
-
-
-
-
-     

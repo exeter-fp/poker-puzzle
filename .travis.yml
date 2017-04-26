@@ -1,4 +1,4 @@
-# from: http://chrispenner.ca/post/homebrew-haskell
+# Haskell building taken from: http://chrispenner.ca/post/homebrew-haskell
 
 language: c
 sudo: false
@@ -13,6 +13,6 @@ before_install:
 - sh tools/install-stack.sh
 - sh tools/install-ghr.sh
 script:
-- cd PokerPuzzle.hsproj
+- cd Nick-Haskell/PokerPuzzle.hsproj
 - stack setup
 - stack build
