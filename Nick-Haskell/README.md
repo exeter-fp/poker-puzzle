@@ -129,7 +129,7 @@ $ threadscope PokerPuzzle.eventlog
 
 ### Performance comparision of the parallel vs serial solution
 
-Disappointingly I saw little difference in the performance of the parallel version verses the concurrent version:
+Disappointingly I saw little difference in the performance of the parallel version verses the sequential version:
 
 | Serial  | Parallel (-N8) |
 | ------------- | ------------- |
