@@ -68,3 +68,44 @@ True
 ## Alternative Haskell implementations
 * https://wiki.haskell.org/Euler_problems/51_to_60#Problem_54
 * https://codereview.stackexchange.com/questions/110867/project-euler-problem-54-in-haskell
+
+# Testing parallel performance 
+
+Build using the threaded runtime and turn on optimisations:
+
+```bash
+# stack clean
+$ stack build --ghc-options -threaded --ghc-options -O2
+```
+
+Run using three OS threads:
+
+```bash
+$ stack exec PokerPuzzle -- +RTS -N3
+```
+or just use `-N` to use all available OS threads
+
+Output execution diagnostics:
+
+```bash
+$ stack exec PokerPuzzle -- +RTS -N -s
+```
+
+To build for threadscope:
+
+```bash
+$ stack clean
+$ stack build --ghc-options -threaded --ghc-options -O2 --ghc-options -rtsopts --ghc-options -eventlog
+```
+
+Running threadscope. First run `PokerPuzzle` with the `-l` option to generate an eventlog which can be used be threadscope:
+
+```bash
+$ stack exec PokerPuzzle -- +RTS -N -l
+```
+
+The run threadscope:
+
+```bash
+$ threadscope PokerPuzzle.eventlog 
+```
