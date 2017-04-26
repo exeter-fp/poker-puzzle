@@ -130,8 +130,10 @@ let doProblem54 () =
         if doesFirstWin firstHand secondHand then 1 else 0
     // Serial - runs in 50ms
     lines |> Array.sumBy processLine
-    // Parallel - runs in 300ms on 4 cores
-    //lines |> Array.map (fun line -> async { return processLine line }) |> Async.Parallel |> Async.RunSynchronously |> Array.sum
+    // Parallel - runs in 175ms on 4 cores. Ignore hyperthreaded processors.
+    // lines |> Array.chunkBySize (lines.Length / (System.Environment.ProcessorCount/2) )
+    // |> Array.map (fun lines -> async { return lines |> Array.sumBy processLine })
+    // |> Async.Parallel |> Async.RunSynchronously |> Array.sum
 
 #time
 match doProblem54() with
