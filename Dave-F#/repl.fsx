@@ -128,8 +128,10 @@ let doProblem54 () =
         let firstHand =   input.[..13]        |> parseHand
         let secondHand =  input.[14..].Trim() |> parseHand
         if doesFirstWin firstHand secondHand then 1 else 0
+    // Serial - runs in 50ms
     lines |> Array.sumBy processLine
-
+    // Parallel - runs in 300ms on 4 cores
+    //lines |> Array.map (fun line -> async { return processLine line }) |> Async.Parallel |> Async.RunSynchronously |> Array.sum
 
 #time
 match doProblem54() with
