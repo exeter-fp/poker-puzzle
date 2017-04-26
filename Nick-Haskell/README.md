@@ -73,7 +73,12 @@ True
 
 ### Making invalid states unrepresentable
 
-I use tuples to represent the cards associated with a rank so for example in `ThreeOfAKind (Card, Card, Card) Kickers`, it's clear that only three cards are relevant to the rank. Note however the type system is not enforcing that the cards have equal value so invalid states are still representable, but I'd argue its a small useful step in the right direction.
+I use tuples to represent the cards associated with a rank so for example in the following:
+
+```haskell
+ThreeOfAKind (Card, Card, Card) Kickers
+```
+... it's clear that only three cards are relevant to the rank. Note however the type system is not enforcing that the cards have equal value so invalid states are still representable, but I'd argue its a small useful step in the right direction.
 
 ### Letting `Ord` find the solution
 
