@@ -211,7 +211,7 @@ to:
 Build using the threaded runtime and turn on optimisations:
 
 ```bash
-# stack clean
+$ stack clean
 $ stack build --ghc-options -threaded --ghc-options -O2
 ```
 
