@@ -11,7 +11,7 @@ The key files are:
 * [`PokerPuzzle.hs`](https://github.com/exeter-fp/poker-puzzle/blob/master/Nick-Haskell/PokerPuzzle.hsproj/PokerPuzzle.hs) - this is where the bulk of the code lives
 * [`Main.hs`](https://github.com/exeter-fp/poker-puzzle/blob/master/Nick-Haskell/PokerPuzzle.hsproj/Main.hs)
 
-All other files are [Haskell for Mac](http://haskellformac.com) boiler-plate.
+All other files are [Haskell for Mac](http://haskellformac.com) workspace or boiler-plate files.
 
 ## Command-line building
 
