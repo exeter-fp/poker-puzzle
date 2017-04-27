@@ -106,7 +106,7 @@ instance Ord Card where
 2) Including the kickers in 'PokerResult' so that if two results match the kickers are compared. Note the kickers are ordered high to low.
 
 
-### Monadic `do` verses applicative style
+### Monadic `do` vs applicative style
 I experimented with how to deal with Maybe values, first using monadic do:
 
 ```haskell
@@ -131,7 +131,7 @@ threeOfAKind (GroupedHand groups) =
 
 ... I think I prefer the applicative style; though I feel its less beginner friendly.
 
-### Explicit `if..then..else` verses `<$` & `guard` verses Monad Comprehensions
+### Explicit `if..then..else` vs `<$` & `guard` vs Monad Comprehensions
 
 Compare:
 
