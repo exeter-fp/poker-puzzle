@@ -125,7 +125,6 @@ royalFlush (Hand cards) =
   in
     -- monad comprehension version of `<$ guard` and if..then..else
     [RoyalFlush $ cardsTuple5 cards | isRoyalFlush]
-
     
 --
 
