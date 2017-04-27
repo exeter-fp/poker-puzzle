@@ -131,7 +131,7 @@ threeOfAKind (GroupedHand groups) =
 
 ... I think I prefer the applicative style; though I feel its less beginner friendly.
 
-### Explicit `if..then..else` vs `<$` & `guard` vs Monad Comprehensions
+### Explicit `if..then..else` vs `<$ guard` vs Monad Comprehensions
 
 Compare:
 
