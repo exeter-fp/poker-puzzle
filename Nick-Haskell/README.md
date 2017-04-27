@@ -131,7 +131,7 @@ threeOfAKind (GroupedHand groups) =
 
 ... I think I prefer the applicative style; though I feel its less beginner friendly.
 
-### Explicit `if..then..else` verses `<$` & `guard`
+### Explicit `if..then..else` verses `<$` & `guard` verses Monad Comprehensions
 
 Compare:
 
@@ -161,6 +161,22 @@ twoPairs (GroupedHand groups) =
     (TwoPairs pair1 pair2 otherCard) <$ guard (length allTwos == 2)
  ```
  The `guard` version is more idomatic, but again I think less beginner friendly. See [IRC chat alternatives to 'if..then..else'](understanding-guard.md)
+
+Finally using [Monad Comprehension](https://ghc.haskell.org/trac/ghc/wiki/MonadComprehensions)
+
+```haskell
+{-# LANGUAGE MonadComprehensions #-}
+
+twoPairs :: GroupedHand -> Maybe PokerResult
+twoPairs (GroupedHand groups) = 
+  let
+    allTwos = filter ((==2) . length) groups
+    pair1 = cardsTuple2 $ allTwos !! 0
+    pair2 = cardsTuple2 $ allTwos !! 1
+    otherCard = head $ filter ((==1) . length) groups
+  in 
+    [ TwoPairs pair1 pair2 otherCard | length allTwos == 2 ]
+ ```
  
 ### Laziness
 
