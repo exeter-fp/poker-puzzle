@@ -1,3 +1,5 @@
+{-# LANGUAGE MonadComprehensions #-}
+
 module PokerPuzzle where
   
 import Data.List (sort, groupBy, find, nub)
@@ -121,7 +123,9 @@ royalFlush (Hand cards) =
     lowestCardValue = value $ head cards
     isRoyalFlush = allSameSuit cards && isStraight cards && lowestCardValue == Jack
   in
-    (RoyalFlush $ cardsTuple5 cards) <$ guard isRoyalFlush
+    -- monad comprehension version of `<$ guard` and if..then..else
+    [RoyalFlush $ cardsTuple5 cards | isRoyalFlush]
+
     
 --
 
