@@ -62,8 +62,9 @@ highCard :: Hand -> PokerResult
 highCard (Hand cards) = HighCard (last cards) (reverse $ init cards) 
 
 onePair :: GroupedHand -> Maybe PokerResult
-onePair (GroupedHand groups) = do 
-    -- using monadic do, see threeOfAKind for applicative alternative
+onePair (GroupedHand groups) = 
+  -- using monadic do, see threeOfAKind for applicative alternative
+  do 
     pair <- find ((==2) . length) groups
     let remainingCards = reverse $ concat $ filter (/=pair) groups
     return $ OnePair (cardsTuple2 pair) remainingCards
