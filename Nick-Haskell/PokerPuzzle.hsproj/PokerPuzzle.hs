@@ -2,12 +2,14 @@
 
 module PokerPuzzle where
   
-import Data.List (sort, groupBy, find, nub)
+import Data.List (sortBy, group, find, nub)
 import Data.Maybe (isJust, fromJust)
 import Control.Monad (guard)
 import Model
 
 type Kickers = [Card]
+type SortedHand = Hand
+type SortedCards = [Card]
 
 data PokerResult = 
     HighCard Card Kickers
@@ -40,12 +42,12 @@ allSameSuit2 :: [Card] -> Bool
 allSameSuit2 cards = length (nub $ map suit cards) == 1 
 
  
-isStraight :: [Card] -> Bool
+isStraight :: SortedCards -> Bool
 isStraight cards  = 
   let
     values = map value cards
     currentPreviousList = zip values $ tail values
-    currentSuccessorPrevious (prev, current) = (succ prev) == current
+    currentSuccessorPrevious (prev, current) = prev == pred current
   in 
     all currentSuccessorPrevious currentPreviousList 
    
@@ -58,15 +60,15 @@ cardsTuple5 [card1, card2, card3, card4, card5] = (card1, card2, card3, card4, c
 
 --
     
-highCard :: Hand -> PokerResult
-highCard (Hand cards) = HighCard (last cards) (reverse $ init cards) 
+highCard :: SortedHand -> PokerResult
+highCard (Hand cards) = HighCard (head cards) (tail cards) 
 
 onePair :: GroupedHand -> Maybe PokerResult
 onePair (GroupedHand groups) = 
   -- using monadic do, see threeOfAKind for applicative alternative
   do 
     pair <- find ((==2) . length) groups
-    let remainingCards = reverse $ concat $ filter (/=pair) groups
+    let remainingCards = concat $ filter (/=pair) groups
     return $ OnePair (cardsTuple2 pair) remainingCards
     
 twoPairs :: GroupedHand -> Maybe PokerResult
@@ -84,11 +86,11 @@ threeOfAKind :: GroupedHand -> Maybe PokerResult
 threeOfAKind (GroupedHand groups) =
   let 
     triplet = cardsTuple3 <$> find ((==3) . length) groups
-    remainingCards = reverse $ concat $ filter ((/=3) . length) groups
+    remainingCards = concat $ filter ((/=3) . length) groups
   in
     ThreeOfAKind <$> triplet <*> pure remainingCards  
       
-straight :: Hand -> Maybe PokerResult
+straight :: SortedHand -> Maybe PokerResult
 straight (Hand cards) = 
   (Straight $ cardsTuple5 cards) <$ guard (isStraight cards)
     
@@ -111,14 +113,14 @@ fourOfAKind (GroupedHand groups) =
   in
     FourOfAKind <$> quadruplet <*> pure otherCard
 
-straightFlush :: Hand -> Maybe PokerResult
+straightFlush :: SortedHand -> Maybe PokerResult
 straightFlush (Hand cards) =
   let
      isStraightFlush = allSameSuit cards && isStraight cards
   in
     (StraightFlush $ cardsTuple5 cards) <$ guard isStraightFlush
     
-royalFlush :: Hand -> Maybe PokerResult
+royalFlush :: SortedHand -> Maybe PokerResult
 royalFlush (Hand cards) =
   let
     lowestCardValue = value $ head cards
@@ -132,9 +134,9 @@ royalFlush (Hand cards) =
 pokerResult :: Hand -> PokerResult
 pokerResult (Hand cardsInHand) = 
   let
-    sortedCards = sort cardsInHand
+    sortedCards = (sortBy (flip compare))  cardsInHand
     sortedHand = Hand sortedCards
-    groupedHand = GroupedHand $ groupBy (\card1 card2 -> value card1 == value card2) $ sortedCards
+    groupedHand = GroupedHand $ group sortedCards
     
     options = [
         royalFlush sortedHand
