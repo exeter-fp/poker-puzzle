@@ -22,7 +22,7 @@ Build using [Xcode](http://appstore.com/mac/Xcode) - free download from a Mac.
 * The extra boiler-plate required for the Swift solution, means a more compact (idiomatic?) Swift solution most likely wouldn't have used anything similar to the `PokerResult` data-type.
 * Comparing IDEs; for simple problems like this, [Haskell for Mac](http://haskellformac.com) worked really well. I was immediately able to see the results of my changes and experiment with code. Xcode's playgrounds offers similar features however I found that Xcode's playground would often fail without properly reporting the error. I also found that Xcode (8.3.2) crashed more frequently than [Haskell for Mac](http://haskellformac.com).
 * Despite superior code completion and documentation integration in Xcode, I really missed [Hoogle](https://www.haskell.org/hoogle) when searching Swift's standard library. 
-* [Haskell for Mac](http://haskellformac.com) code completion and lookup has a long way to go before it reaches what is expected from a modern IDE.
+* That said ... [Haskell for Mac](http://haskellformac.com) code completion and lookup has a long way to go before it reaches what is expected from a modern IDE.
 * Swift's `switch .. case` has surprisingly powerful pattern matching capabilities. I think this is under-appreciated by the Swift community.
 
 ## Extra boilerplate required by Swift
