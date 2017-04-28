@@ -113,7 +113,7 @@ I experimented with how to deal with Maybe values, first using monadic do:
 onePair :: GroupedHand -> Maybe PokerResult
 onePair (GroupedHand groups) = do 
     pair <- find ((==2) . length) groups
-    let remainingCards = reverse $ concat $ filter (/=pair) groups
+    let remainingCards = concat $ filter (/=pair) groups
     return $ OnePair (cardsTuple2 pair) remainingCards
 ```
 
@@ -124,7 +124,7 @@ threeOfAKind :: GroupedHand -> Maybe PokerResult
 threeOfAKind (GroupedHand groups) =
   let 
     triplet = cardsTuple3 <$> find ((==3) . length) groups
-    remainingCards = reverse $ concat $ filter ((/=3) . length) groups
+    remainingCards = concat $ filter ((/=3) . length) groups
   in
     ThreeOfAKind <$> triplet <*> pure remainingCards 
 ```
