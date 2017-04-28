@@ -14,12 +14,12 @@ Build using [Xcode](http://appstore.com/mac/Xcode) - free download from a Mac.
 ## Comparison with Haskell solution
 
 * Once I'd written the Haskell solution it just worked&trade; first time; however the Swift version required debugging - surprising as the Haskell version came first.
-* The bugs I introduced into the Swift version were in the boilerplate or the missing standard library code (`group`) that I had to write.
+* The bugs I introduced into the Swift version were in the boilerplate or the missing standard library code (`group`) that I had to write 😟
 * The time to write both versions was similar, if I deduct the time it took me to work out the skeleton of the solution. This surprised me as I'm far more fluent in Swift than Haskell. However I was using areas of Swift that I haven't used before eg overloading `Comparable`, `Equatable` and `Hashable`.
 * While porting the solution to Swift, I noticed a number of small improvement and simplifications I could make to the Haskell version. I guess I [paired](https://en.wikipedia.org/wiki/Pair_programming) with myself!
 * Swift's syntatic support for `Optional` (equivalent to Haskell's `Maybe`) - `guard let` and `if let` - meant I didn't miss Haskell's higher kinded types; `Functor`, `Applicative` and `Monad`
 * With the exception of the extra boiler-plate required, the Haskell and Swift solutions are remarkably similar.
-* The extra boiler-plate required for the Swift solution, means a more compact Swift solution most likely wouldn't have used anything similar to the `PokerResult` data-type.
+* The extra boiler-plate required for the Swift solution, means a more compact (idiomatic?) Swift solution most likely wouldn't have used anything similar to the `PokerResult` data-type.
 * Comparing IDEs; for simple problems like this, [Haskell for Mac](http://haskellformac.com) worked really well. I was immediately able to see the results of my changes and experiment with code. Xcode's playgroups offer's similar features however I found that Xcode's playground would often fail without properly reporting the error. I also found that Xcode (8.3.2) crashed more frequently than [Haskell for Mac](http://haskellformac.com). That said I used [Hoogle](https://www.haskell.org/hoogle) extensively. I would be great if better lookup support is included in [Haskell for Mac](http://haskellformac.com).
 * Despite superior code completion and documentation integration in Xcode, I really missed [Hoogle](https://www.haskell.org/hoogle) when searching Swift's standard library.
 
