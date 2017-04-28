@@ -206,7 +206,7 @@ func isStraight(cards : SortedCards) -> Bool {
 ```
 ###  No Swift version of `group`
 
-I wrote my own horribly imperative version of group, as I couldn't find one in the stardard library:
+I wrote my own horribly imperative version of group, as I couldn't find one in the standard library:
 
 ```swift
 extension Array where Element == Card {
