@@ -1,5 +1,7 @@
 import Foundation
 
+// See: https://projecteuler.net/problem=54
+
 func printUsage() {
     let executableName = URL(string: CommandLine.arguments[0])!.lastPathComponent
     
