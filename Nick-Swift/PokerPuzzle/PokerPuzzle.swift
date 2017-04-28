@@ -299,7 +299,7 @@ extension Array where Element == Card {
 
 
 func pokerResult(cards:Hand) -> PokerResult {
-    let sortedCards = cards.sorted { $0 > $1 }
+    let sortedCards = cards.sorted { $0 > $1 } // descending order
     let groupedCards = sortedCards.group()
     
     if let result = royalFlush(cards: sortedCards) {
