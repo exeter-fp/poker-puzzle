@@ -24,6 +24,7 @@ Build using [Xcode](http://appstore.com/mac/Xcode) - free download from a Mac.
 * Despite superior code completion and documentation integration in Xcode, I really missed [Hoogle](https://www.haskell.org/hoogle) when searching Swift's standard library. 
 * That said ... [Haskell for Mac](http://haskellformac.com) code completion and lookup has a long way to go before it reaches what is expected from a modern IDE/code editor.
 * Swift's `switch .. case` has surprisingly powerful pattern matching capabilities. I think this is under-appreciated by the Swift community.
+* It is trivial to [parallelise the Haskell version](https://github.com/exeter-fp/poker-puzzle/tree/master/Nick-Haskell#parallelising-the-solution). I am not aware of similar thread-pool, green thread solutions in Swift; using OS threads directly would not map easily to the solution.  
 
 ## Extra boilerplate required by Swift
 
