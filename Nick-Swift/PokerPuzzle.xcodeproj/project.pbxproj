@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		84A76B871EB1E73D00DF16C4 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A76B861EB1E73D00DF16C4 /* main.swift */; };
+		84A76B8E1EB1E77400DF16C4 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A76B8D1EB1E77400DF16C4 /* Model.swift */; };
+		84A76B901EB1E78700DF16C4 /* Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A76B8F1EB1E78700DF16C4 /* Parsing.swift */; };
+		84A76B921EB1E79E00DF16C4 /* PokerPuzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A76B911EB1E79E00DF16C4 /* PokerPuzzle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +28,9 @@
 /* Begin PBXFileReference section */
 		84A76B831EB1E73D00DF16C4 /* PokerPuzzle */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PokerPuzzle; sourceTree = BUILT_PRODUCTS_DIR; };
 		84A76B861EB1E73D00DF16C4 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		84A76B8D1EB1E77400DF16C4 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		84A76B8F1EB1E78700DF16C4 /* Parsing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parsing.swift; sourceTree = "<group>"; };
+		84A76B911EB1E79E00DF16C4 /* PokerPuzzle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PokerPuzzle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +64,9 @@
 			isa = PBXGroup;
 			children = (
 				84A76B861EB1E73D00DF16C4 /* main.swift */,
+				84A76B8D1EB1E77400DF16C4 /* Model.swift */,
+				84A76B8F1EB1E78700DF16C4 /* Parsing.swift */,
+				84A76B911EB1E79E00DF16C4 /* PokerPuzzle.swift */,
 			);
 			path = PokerPuzzle;
 			sourceTree = "<group>";
@@ -121,6 +130,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				84A76B871EB1E73D00DF16C4 /* main.swift in Sources */,
+				84A76B901EB1E78700DF16C4 /* Parsing.swift in Sources */,
+				84A76B8E1EB1E77400DF16C4 /* Model.swift in Sources */,
+				84A76B921EB1E79E00DF16C4 /* PokerPuzzle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,6 +264,7 @@
 				84A76B8C1EB1E73D00DF16C4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
