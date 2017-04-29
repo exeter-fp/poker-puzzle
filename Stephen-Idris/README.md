@@ -1,0 +1,3 @@
+*Poker solution in Idris*
+
+Maybe put some explanation here...
