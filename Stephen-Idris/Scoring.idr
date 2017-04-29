@@ -40,11 +40,11 @@ groupPairs (cards ** pf) = reverse $ sortBy counts $ map getCounts $ groupBy get
 ||| Get the pairs in the hand
 getPairs : SortedCards 5 -> Maybe Score
 getPairs hand = case groupPairs hand of
-                    ((rank, 4) :: x :: []) => Just $ FourofaKind rank
-                    ((rank, 3) :: x :: x' :: []) => Just $ ThreeofaKind rank
-                    ((rank, 2) :: (rank', 2) :: x :: []) => Just $ TwoPairs rank rank'
-                    ((rank, 3) :: (rank', 2) :: []) => Just $ FullHouse rank rank'
-                    ((rank, 2) :: x :: x' :: x'' :: []) => Just $ OnePair rank
+                    ((rank, 4) :: _) => Just $ FourofaKind rank
+                    ((rank, 3) :: _) => Just $ ThreeofaKind rank
+                    ((rank, 2) :: (rank', 2) :: _) => Just $ TwoPairs rank rank'
+                    ((rank, 3) :: (rank', 2) :: _) => Just $ FullHouse rank rank'
+                    ((rank, 2) :: _) => Just $ OnePair rank
                     _ => Nothing
 
 
