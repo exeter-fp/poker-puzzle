@@ -1,6 +1,7 @@
 module Main where
 
-import Lib
+import Model
+import Parsing
 
 main :: IO ()
 main = do
