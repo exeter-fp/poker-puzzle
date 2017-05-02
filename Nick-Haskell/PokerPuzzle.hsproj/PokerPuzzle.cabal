@@ -13,9 +13,12 @@ Executable PokerPuzzle
   buildable: True
   build-depends:
       base -any,
+      parallel -any,
+      HUnit -any,
       text -any,
-      parallel -any
+      hspec -any
   other-modules:
+      Tests
       Model
       PokerPuzzle
       Parsing

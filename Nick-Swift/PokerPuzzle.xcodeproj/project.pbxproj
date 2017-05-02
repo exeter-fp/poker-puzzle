@@ -7,10 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		84A76B871EB1E73D00DF16C4 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A76B861EB1E73D00DF16C4 /* main.swift */; };
-		84A76B8E1EB1E77400DF16C4 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A76B8D1EB1E77400DF16C4 /* Model.swift */; };
-		84A76B901EB1E78700DF16C4 /* Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A76B8F1EB1E78700DF16C4 /* Parsing.swift */; };
-		84A76B921EB1E79E00DF16C4 /* PokerPuzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A76B911EB1E79E00DF16C4 /* PokerPuzzle.swift */; };
+		84669EC11EB498E900679018 /* PokerPuzzleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84669EC01EB498E900679018 /* PokerPuzzleTests.swift */; };
+		84669ED41EB8799F00679018 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A76B861EB1E73D00DF16C4 /* main.swift */; };
+		84669EDA1EB87C8C00679018 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A76B8D1EB1E77400DF16C4 /* Model.swift */; };
+		84669EDB1EB87C9000679018 /* Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A76B8F1EB1E78700DF16C4 /* Parsing.swift */; };
+		84669EDC1EB87C9400679018 /* PokerPuzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A76B911EB1E79E00DF16C4 /* PokerPuzzle.swift */; };
+		84669EDD1EB87CC500679018 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A76B8D1EB1E77400DF16C4 /* Model.swift */; };
+		84669EDE1EB87CC800679018 /* Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A76B8F1EB1E78700DF16C4 /* Parsing.swift */; };
+		84669EDF1EB87CCB00679018 /* PokerPuzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A76B911EB1E79E00DF16C4 /* PokerPuzzle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,6 +30,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		84669EBE1EB498E900679018 /* PokerPuzzleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PokerPuzzleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		84669EC01EB498E900679018 /* PokerPuzzleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokerPuzzleTests.swift; sourceTree = "<group>"; };
+		84669EC21EB498E900679018 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84A76B831EB1E73D00DF16C4 /* PokerPuzzle */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PokerPuzzle; sourceTree = BUILT_PRODUCTS_DIR; };
 		84A76B861EB1E73D00DF16C4 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		84A76B8D1EB1E77400DF16C4 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -34,6 +41,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		84669EBB1EB498E900679018 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		84A76B801EB1E73D00DF16C4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -44,10 +58,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		84669EBF1EB498E900679018 /* PokerPuzzleTests */ = {
+			isa = PBXGroup;
+			children = (
+				84669EC01EB498E900679018 /* PokerPuzzleTests.swift */,
+				84669EC21EB498E900679018 /* Info.plist */,
+			);
+			path = PokerPuzzleTests;
+			sourceTree = "<group>";
+		};
 		84A76B7A1EB1E73D00DF16C4 = {
 			isa = PBXGroup;
 			children = (
 				84A76B851EB1E73D00DF16C4 /* PokerPuzzle */,
+				84669EBF1EB498E900679018 /* PokerPuzzleTests */,
 				84A76B841EB1E73D00DF16C4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -56,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				84A76B831EB1E73D00DF16C4 /* PokerPuzzle */,
+				84669EBE1EB498E900679018 /* PokerPuzzleTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -74,6 +99,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		84669EBD1EB498E900679018 /* PokerPuzzleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 84669EC31EB498E900679018 /* Build configuration list for PBXNativeTarget "PokerPuzzleTests" */;
+			buildPhases = (
+				84669EBA1EB498E900679018 /* Sources */,
+				84669EBB1EB498E900679018 /* Frameworks */,
+				84669EBC1EB498E900679018 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PokerPuzzleTests;
+			productName = PokerPuzzleTests;
+			productReference = 84669EBE1EB498E900679018 /* PokerPuzzleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		84A76B821EB1E73D00DF16C4 /* PokerPuzzle */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 84A76B8A1EB1E73D00DF16C4 /* Build configuration list for PBXNativeTarget "PokerPuzzle" */;
@@ -101,6 +143,10 @@
 				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = "Rocketbox Ltd";
 				TargetAttributes = {
+					84669EBD1EB498E900679018 = {
+						CreatedOnToolsVersion = 8.3.2;
+						ProvisioningStyle = Automatic;
+					};
 					84A76B821EB1E73D00DF16C4 = {
 						CreatedOnToolsVersion = 8.3.2;
 						ProvisioningStyle = Automatic;
@@ -120,25 +166,73 @@
 			projectRoot = "";
 			targets = (
 				84A76B821EB1E73D00DF16C4 /* PokerPuzzle */,
+				84669EBD1EB498E900679018 /* PokerPuzzleTests */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		84669EBC1EB498E900679018 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		84669EBA1EB498E900679018 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84669EC11EB498E900679018 /* PokerPuzzleTests.swift in Sources */,
+				84669EDE1EB87CC800679018 /* Parsing.swift in Sources */,
+				84669EDD1EB87CC500679018 /* Model.swift in Sources */,
+				84669EDF1EB87CCB00679018 /* PokerPuzzle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		84A76B7F1EB1E73D00DF16C4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84A76B871EB1E73D00DF16C4 /* main.swift in Sources */,
-				84A76B901EB1E78700DF16C4 /* Parsing.swift in Sources */,
-				84A76B8E1EB1E77400DF16C4 /* Model.swift in Sources */,
-				84A76B921EB1E79E00DF16C4 /* PokerPuzzle.swift in Sources */,
+				84669ED41EB8799F00679018 /* main.swift in Sources */,
+				84669EDB1EB87C9000679018 /* Parsing.swift in Sources */,
+				84669EDA1EB87C8C00679018 /* Model.swift in Sources */,
+				84669EDC1EB87C9400679018 /* PokerPuzzle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		84669EC41EB498E900679018 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = PokerPuzzleTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Rocketbox-Ltd.PokerPuzzleTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		84669EC51EB498E900679018 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = PokerPuzzleTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "Rocketbox-Ltd.PokerPuzzleTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
 		84A76B881EB1E73D00DF16C4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -248,6 +342,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		84669EC31EB498E900679018 /* Build configuration list for PBXNativeTarget "PokerPuzzleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				84669EC41EB498E900679018 /* Debug */,
+				84669EC51EB498E900679018 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		84A76B7E1EB1E73D00DF16C4 /* Build configuration list for PBXProject "PokerPuzzle" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
