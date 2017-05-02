@@ -114,38 +114,38 @@ ranksAppearingExactlyNTimes n = map head . filter (\x -> length x == n) . group
 highCardMatcher :: Hand -> Maybe BestHand
 highCardMatcher h = Just $ HighCard (head $ sortedRanks h) (tail $ sortedRanks h)
 
--- TODO: Remove duplication between this and `twoPairMatcher`, `threeOfAKindMatcher`
--- and `fourOfAKindMatcher`
+
+-- Helper method to find 'n-of-a-kind' - extracts the common logic used for
+-- matching `OnePair`, `ThreeOfAKind` and `FourOfAKind`.  The second argument is
+-- the data constructor used for creating the `BestHand`
+nOfAKindMatcher :: Int -> (Rank -> Kickers -> BestHand) -> Hand -> Maybe BestHand
+nOfAKindMatcher n f h
+    | not (null groups) = Just (f rank kickers)
+    | otherwise = Nothing
+    where ranks = sortedRanks h
+          groups = ranksAppearingExactlyNTimes n ranks
+          rank = head groups
+          kickers = removeRanks [rank] ranks
+
 onePairMatcher :: Hand -> Maybe BestHand
-onePairMatcher h
-    | length pairs == 1 = Just $ OnePair highRank kickers
-    | otherwise = Nothing
-    where ranks = sortedRanks h
-          pairs = ranksAppearingExactlyNTimes 2 ranks
-          highRank = head pairs
-          kickers = removeRanks [highRank] ranks
+onePairMatcher = nOfAKindMatcher 2 OnePair
 
+-- To match two pairs, we first match one pair, then attempt to match another
+-- pair from the remaining Kickers
 twoPairsMatcher :: Hand -> Maybe BestHand
-twoPairsMatcher h
-    | length pairs == 2 = Just $ TwoPairs highRank lowRank kickers
-    | otherwise = Nothing
-    where ranks = sortedRanks h
-          pairs = ranksAppearingExactlyNTimes 2 ranks
-          highRank = head pairs
-          lowRank = pairs !! 1
-          kickers = removeRanks [highRank, lowRank] ranks
-
-allTriples :: [Rank] -> [Rank]
-allTriples = map head . filter (\x -> length x == 3) . group
+twoPairsMatcher h = do
+    OnePair h k <- onePairMatcher h
+    -- This isn't as nice as it could be - because the `k` returned from the
+    -- preceding `onePairMatcher` is a `[Rank]` rather than a `Hand`, we
+    -- can't simply pass it straight into the second match.  Instead we have
+    -- to construct an artificial 'hand' consisting of the kicker ranks all
+    -- assigned to Clubs.  It would be nicer if the kickers were the full
+    -- `Card` instances to improve composability
+    OnePair l k' <- onePairMatcher (fmap (flip Card Clubs) k)
+    return $ TwoPairs h l k'
 
 threeOfAKindMatcher :: Hand -> Maybe BestHand
-threeOfAKindMatcher h
-    | length triples == 1 = Just $ ThreeOfAKind rank kickers
-    | otherwise = Nothing
-    where ranks = sortedRanks h
-          triples = ranksAppearingExactlyNTimes 3 ranks
-          rank = head triples
-          kickers = removeRanks [rank] ranks
+threeOfAKindMatcher = nOfAKindMatcher 3 ThreeOfAKind
 
 straightMatcher :: Hand -> Maybe BestHand
 straightMatcher h
@@ -164,13 +164,7 @@ fullHouseMatcher h = do
     return $ FullHouse t p
 
 fourOfAKindMatcher :: Hand -> Maybe BestHand
-fourOfAKindMatcher h
-    | length quads == 1 = Just $ FourOfAKind rank kickers
-    | otherwise = Nothing
-    where ranks = sortedRanks h
-          quads = ranksAppearingExactlyNTimes 4 ranks
-          rank = head quads
-          kickers = removeRanks [rank] ranks
+fourOfAKindMatcher = nOfAKindMatcher 4 FourOfAKind
 
 straightFlushMatcher :: Hand -> Maybe BestHand
 straightFlushMatcher h = do
@@ -219,7 +213,7 @@ winner (Round p1 p2)
 -- pattern errors.  Instead, we should make `parseRank :: String -> Maybe Rank`
 -- and compose them using Applicatives.
 parseRank :: String -> Rank
-parseRank s = case (head s) of
+parseRank s = case head s of
                    '2' -> Two
                    '3' -> Three
                    '4' -> Four
@@ -235,7 +229,7 @@ parseRank s = case (head s) of
                    'A' -> Ace
 
 parseSuit :: String -> Suit
-parseSuit s = case (s !! 1) of
+parseSuit s = case s !! 1 of
                    'H' -> Hearts
                    'C' -> Clubs
                    'D' -> Diamonds
