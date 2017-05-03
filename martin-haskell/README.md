@@ -22,3 +22,11 @@ This project is built using [Stack](https://docs.haskellstack.org/en/stable/READ
 ## Executing the Project
 
 - Run `stack exec poker-puzzle-exe` to run the project.
+
+
+## Main Files
+
+- [src/Model.hs](src/Model.hs) - underlying data model, and supporting functions to locate best hands.
+- [src/Util.hs](src/Util.hs) - supporting utility functions that are independent of the problem.
+- [src/Parsing.hs](src/Parsing.hs) - code to parse inputs into the model.
+- [app/Main.hs](app/Main.hs) - main application entry point
