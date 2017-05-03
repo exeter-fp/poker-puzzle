@@ -91,7 +91,7 @@ type TwoRank = Rank
 -- Takes a hand and creates the best hand from it
 bestHand :: Hand -> BestHand
 bestHand = maximum . possibleHands
-    where possibleHands h = catMaybes $ handMatchers <*> [h]
+    where possibleHands h = catMaybes $ handMatchers <*> pure h
 
 -- A list of 'hand matchers' - functions that can be used to 'match' hands.  By
 -- applying this list of functions to a hand, we'll get a list of `Maybe
