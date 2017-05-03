@@ -88,11 +88,6 @@ handMatchers = [highCardMatcher,
                 straightFlushMatcher,
                 royalFlushMatcher]
 
-sameSuit :: Card -> Card -> Bool
-sameSuit (Card _ s) (Card _ s') = s == s'
-
-sameRank :: Card -> Card -> Bool
-sameRank (Card r _) (Card r' _ ) = r == r'
 
 rank :: Card -> Rank
 rank (Card r _) = r
@@ -156,6 +151,7 @@ flushMatcher :: Hand -> Maybe BestHand
 flushMatcher h
     | length (groupBy sameSuit h) == 1 = Just Flush
     | otherwise = Nothing
+    where sameSuit (Card _ s) (Card _ s') = s == s'
 
 fullHouseMatcher :: Hand -> Maybe BestHand
 fullHouseMatcher h = do
@@ -183,9 +179,8 @@ data Round = Round Hand Hand deriving (Eq, Show)
 data Winner = Player1 | Player2 | Draw deriving (Eq, Show)
 
 winner :: Round -> Winner
-winner (Round p1 p2)
-    | h1 > h2 = Player1
-    | h2 > h1 = Player2
-    | otherwise = Draw
-    where h1 = bestHand p1
-          h2 = bestHand p2
+winner (Round h1 h2) =
+    case compare (bestHand h1) (bestHand h2) of
+         GT -> Player1
+         LT -> Player2
+         EQ -> Draw
