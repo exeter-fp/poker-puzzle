@@ -1,6 +1,7 @@
 import Test.Hspec
 import Model
 import Parsing
+import Data.Maybe (mapMaybe)
 
 testHand1 = describe "Hand 1" $
                 it "Pair of Eights beats Pair of Fives" $
@@ -84,7 +85,8 @@ testMatcherHand5 = describe "Hand 5" $ do
 player1Wins :: IO Int
 player1Wins = do
     input <- readFile "../poker.txt"
-    let winners = map (winner . parseRound) (lines input)
+    let rounds = mapMaybe parseRound (lines input)
+        winners = map winner rounds
         p1Wins = length (filter (== Player1) winners) in
         return p1Wins
 
