@@ -82,7 +82,7 @@
          (ranks     [id<hand.rank])    ; sorted list of ranks
          ;; sorting the groups like this simplifies finding the 'scoring' part of the hand
          (groups    [length,first,id>group.ranks]))
-    (flet ((make-hand-score (name rank ranked)   [name,rank,ranked.0,reverse.ranks])
+    (flet ((make-hand-score (name rank ranked)   [rank,ranked.0,reverse.ranks])
            (groups (&rest matches)               [matches=groups.length]))
       (macrolet ((scores (&rest scores)
                    `(or ,@ (loop for (name test) in scores for rank downfrom (length scores)

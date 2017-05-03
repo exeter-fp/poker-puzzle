@@ -91,7 +91,7 @@
   (append a (list b)))
 ;; (\, '(1 2 3) 4)
 
-(defmethod |op/,| (a b) (\, (list a) b))
+(defmethod |op/,| (a b) (|op/,| (list a) b))
 ;; (\, 1 2)
 
 ;; (the comma operator above isn't going to be efficient)
@@ -109,15 +109,20 @@
 
 (defmethod |op/<| ((a list) (b list))
   (loop for x in a for y in b
+     unless (eql x y)
+     return (< x y)))
+
+(defmethod |op/>| ((a list) (b list))
+  (loop for x in a for y in b
        unless (eql x y)
-       return (< x y)))
+       return (> x y)))
 
 ;; !!! SORTING by key
 (defmethod |op/<| ((a function) (b list))
   (sort (mapcar #'identity b) #'|op/<| :key a))
 
 (defmethod |op/>| ((a function) (b list))
-  (sort (mapcar #'identity b) #'|op/>| :key b))
+  (sort (mapcar #'identity b) #'|op/>| :key a))
 
 
 (defmethod |op/=| (a b) (eql a b))
