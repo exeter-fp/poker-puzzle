@@ -65,8 +65,7 @@ data BestHand =
   | RoyalFlush
   deriving (Eq, Ord, Show)
 
-type Kickers = [Rank]
-
+type Kickers = [Card]
 
 -- Takes a hand of 5 cards and creates the best hand from it
 bestHand :: Hand -> BestHand
@@ -98,8 +97,13 @@ sameRank (Card r _) (Card r' _ ) = r == r'
 rank :: Card -> Rank
 rank (Card r _) = r
 
-removeRanks :: [Rank] -> [Rank] -> [Rank]
-removeRanks removals = filter (`notElem` removals)
+-- Sorts a hand into descending order
+descendingHand :: Hand -> Hand
+descendingHand = sortBy (flip compare)
+
+-- Removes all cards of rank `r` from a hand, leaving the remainders
+withoutRank :: Rank -> Hand -> Hand
+withoutRank r = filter (\c -> rank c /= r)
 
 -- Given a Hand, extracts the Ranks of the Cards in the Hand, in decreasing order
 sortedRanks :: Hand -> [Rank]
@@ -111,7 +115,10 @@ ranksAppearingExactlyNTimes n = map head . filter (\x -> length x == n) . group
 -- Hand Matchers for the various possible BestHands
 
 highCardMatcher :: Hand -> Maybe BestHand
-highCardMatcher h = Just $ HighCard (head $ sortedRanks h) (tail $ sortedRanks h)
+highCardMatcher h =
+    let descHand = descendingHand h
+        highestRank = rank . head $ descHand in
+        Just $ HighCard highestRank (withoutRank highestRank descHand)
 
 
 -- Helper method to find 'n-of-a-kind' - extracts the common logic used for
@@ -119,12 +126,12 @@ highCardMatcher h = Just $ HighCard (head $ sortedRanks h) (tail $ sortedRanks h
 -- the data constructor used for creating the `BestHand`
 nOfAKindMatcher :: Int -> (Rank -> Kickers -> BestHand) -> Hand -> Maybe BestHand
 nOfAKindMatcher n f h
-    | not (null groups) = Just (f rank kickers)
+    | not (null groups) = Just (f highestRank kickers)
     | otherwise = Nothing
-    where ranks = sortedRanks h
-          groups = ranksAppearingExactlyNTimes n ranks
-          rank = head groups
-          kickers = removeRanks [rank] ranks
+    where descHand = descendingHand h
+          groups = ranksAppearingExactlyNTimes n (rank <$> descHand)
+          highestRank = head groups
+          kickers = withoutRank highestRank descHand
 
 onePairMatcher :: Hand -> Maybe BestHand
 onePairMatcher = nOfAKindMatcher 2 OnePair
@@ -134,13 +141,7 @@ onePairMatcher = nOfAKindMatcher 2 OnePair
 twoPairsMatcher :: Hand -> Maybe BestHand
 twoPairsMatcher h = do
     OnePair h k <- onePairMatcher h
-    -- This isn't as nice as it could be - because the `k` returned from the
-    -- preceding `onePairMatcher` is a `[Rank]` rather than a `Hand`, we
-    -- can't simply pass it straight into the second match.  Instead we have
-    -- to construct an artificial 'hand' consisting of the kicker ranks all
-    -- assigned to Clubs.  It would be nicer if the kickers were the full
-    -- `Card` instances to improve composability
-    OnePair l k' <- onePairMatcher (fmap (flip Card Clubs) k)
+    OnePair l k' <- onePairMatcher k
     return $ TwoPairs h l k'
 
 threeOfAKindMatcher :: Hand -> Maybe BestHand
@@ -176,7 +177,6 @@ royalFlushMatcher h = do
     StraightFlush r <- straightFlushMatcher h
     if r == Ace then Just RoyalFlush
                 else Nothing
-
 
 data Round = Round Hand Hand deriving (Eq, Show)
 

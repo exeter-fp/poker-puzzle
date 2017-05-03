@@ -5,26 +5,26 @@ import Parsing
 testHand1 = describe "Hand 1" $
                 it "Pair of Eights beats Pair of Fives" $
                     (player1 > player2) `shouldBe` False
-                    where player1 = OnePair Five  [King, Seven, Six]
-                          player2 = OnePair Eight [Ten, Three, Two]
+                    where player1 = OnePair Five  [Card King Diamonds, Card Seven Spades, Card Six Spades]
+                          player2 = OnePair Eight [Card Ten Diamonds, Card Three Spades, Card Two Clubs]
 
 testHand2 = describe "Hand 2" $
                 it "One Ace beats one Queen" $
                     (player1 > player2) `shouldBe` True
-                    where player1 = HighCard Ace   [Jack, Nine, Eight, Five]
-                          player2 = HighCard Queen [Eight, Seven, Five, Two]
+                    where player1 = HighCard Ace   [Card Jack Spades, Card Nine Spades, Card Eight Clubs, Card Five Diamonds]
+                          player2 = HighCard Queen [Card Eight Spades, Card Seven Diamonds, Card Five Clubs, Card Two Clubs]
 
 testHand3 = describe "Hand 3" $
                 it "Flush beats Three Aces" $
                     (player1 > player2) `shouldBe` False
-                    where player1 = ThreeOfAKind Ace [Nine, Two]
+                    where player1 = ThreeOfAKind Ace [Card Nine Clubs, Card Two Diamonds]
                           player2 = Flush
 
 testHand4 = describe "Hand 4" $
                 it "Queens Nine High beats Queens Seven High" $
                     (player1 > player2) `shouldBe` True
-                    where player1 = OnePair Queen [Nine, Six, Four]
-                          player2 = OnePair Queen [Seven, Six, Three]
+                    where player1 = OnePair Queen [Card Nine Hearts, Card Six Spades, Card Four Diamonds]
+                          player2 = OnePair Queen [Card Seven Hearts, Card Six Diamonds, Card Three Diamonds]
 
 testHand5 = describe "Hand 5" $
                 it "Full House (Fours & Twos) beats Full House (Threes & Nines)" $
@@ -35,9 +35,9 @@ testHand5 = describe "Hand 5" $
 
 testMatcherHand1 = describe "Hand 1" $ do
                 it "Player 1 - 5H 5C 6S 7S KD => Pair of Fives" $
-                    bestHand player1 `shouldBe` OnePair Five [King, Seven, Six]
+                    bestHand player1 `shouldBe` OnePair Five [Card King Diamonds, Card Seven Spades, Card Six Spades]
                 it "Player 2 - 2C 3S 8S 8D TD => Pair of Eights" $
-                    bestHand player2 `shouldBe` OnePair Eight [Ten, Three, Two]
+                    bestHand player2 `shouldBe` OnePair Eight [Card Ten Diamonds, Card Three Spades, Card Two Clubs]
 
                     where player1 = [Card Five Hearts, Card Five Clubs, Card Six Spades, Card Seven Spades, Card King Diamonds]
                           player2 = [Card Two Clubs, Card Three Spades, Card Eight Spades, Card Eight Diamonds, Card Ten Diamonds]
@@ -45,9 +45,9 @@ testMatcherHand1 = describe "Hand 1" $ do
 
 testMatcherHand2 = describe "Hand 2" $ do
                 it "Player 1 - 5D 8C 9S JS AC => High Card Ace" $
-                    bestHand player1 `shouldBe` HighCard Ace [Jack, Nine, Eight, Five]
+                    bestHand player1 `shouldBe` HighCard Ace [Card Jack Spades, Card Nine Spades, Card Eight Clubs, Card Five Diamonds]
                 it "Player 2 - 2C 5C 7D 8S QH => High Card Queen" $
-                    bestHand player2 `shouldBe` HighCard Queen [Eight, Seven, Five, Two]
+                    bestHand player2 `shouldBe` HighCard Queen [Card Eight Spades, Card Seven Diamonds, Card Five Clubs, Card Two Clubs]
 
                     where player1 = [Card Five Diamonds, Card Eight Clubs, Card Nine Spades, Card Jack Spades, Card Ace Clubs]
                           player2 = [Card Two Clubs, Card Five Clubs, Card Seven Diamonds, Card Eight Spades, Card Queen Hearts]
@@ -55,7 +55,7 @@ testMatcherHand2 = describe "Hand 2" $ do
 
 testMatcherHand3 = describe "Hand 3" $ do
                 it "Player 1 - 2D 9C AS AH AC => Three Aces" $
-                    bestHand player1 `shouldBe` ThreeOfAKind Ace [Nine, Two]
+                    bestHand player1 `shouldBe` ThreeOfAKind Ace [Card Nine Clubs, Card Two Diamonds]
                 it "Player 2 - 3D 6D 7D TD QD => Flush" $
                     bestHand player2 `shouldBe` Flush
 
@@ -64,9 +64,9 @@ testMatcherHand3 = describe "Hand 3" $ do
 
 testMatcherHand4 = describe "Hand 4" $ do
                 it "Player 1 - 4D 6S 9H QH QC => Queen Pair, Nine High" $
-                    bestHand player1 `shouldBe` OnePair Queen [Nine, Six, Four]
+                    bestHand player1 `shouldBe` OnePair Queen [Card Nine Hearts, Card Six Spades, Card Four Diamonds]
                 it "Player 2 - 3D 6D 7H QD QS => Queen Pair, Seven High" $
-                    bestHand player2 `shouldBe` OnePair Queen [Seven, Six, Three]
+                    bestHand player2 `shouldBe` OnePair Queen [Card Seven Hearts, Card Six Diamonds, Card Three Diamonds]
 
                     where player1 = [Card Four Diamonds, Card Six Spades, Card Nine Hearts, Card Queen Hearts, Card Queen Clubs]
                           player2 = [Card Three Diamonds, Card Six Diamonds, Card Seven Hearts, Card Queen Diamonds, Card Queen Spades]
