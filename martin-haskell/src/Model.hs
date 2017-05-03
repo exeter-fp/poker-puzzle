@@ -5,6 +5,10 @@ import Data.Maybe (catMaybes)
 import Control.Applicative ((<$>))
 import Util
 
+------------------------------------------
+-- Basic data model for Cards and Hands --
+------------------------------------------
+
 -- Suits don't have an `Ord` instance, as there's no notion of Suit order
 data Suit =
       Hearts
@@ -39,19 +43,24 @@ data Card =
 instance Ord Card where
     compare (Card r _) (Card r' _) = compare r r'
 
+-- Accessor to extract the `Rank` from a `Card`
+rank :: Card -> Rank
+rank (Card r _) = r
+
 -- Sadly we can't specify the size of the hand.  This isn't Idris... :-(
 type Hand = [Card]
 
--- Various type aliases to make the use of `Rank` in `BestHand` clearer
-type HighRank = Rank
-type LowRank = Rank
-type ThreeRank = Rank
-type TwoRank = Rank
+
+
+-----------------------------
+-- Data model for BestHand --
+-----------------------------
 
 -- A 'Best Hand' consists of the best available cards and possibly one or more
 -- 'Kickers' (the remaining cards that decide in the event of a 'best cards'
--- tie).  The assumptions we make about the `BestCards` and `Kickers` types
--- allow us to use the default derived `Ord` instance to detect winning hands.
+-- tie).  The assumptions we make about ordering in the `BestCards` and
+-- `Kickers` types allow us to use the default derived `Ord` instance to detect
+-- winning hands.
 data BestHand =
     HighCard Rank Kickers
   | OnePair Rank Kickers
@@ -67,7 +76,21 @@ data BestHand =
 
 type Kickers = [Card]
 
--- Takes a hand of 5 cards and creates the best hand from it
+-- Various type aliases to make the use of `Rank` in `BestHand` clearer
+type HighRank = Rank
+type LowRank = Rank
+type ThreeRank = Rank
+type TwoRank = Rank
+
+
+
+
+
+-----------------------------------------------------------------------
+-- Functions to determine the best possible hand from a given `Hand` --
+-----------------------------------------------------------------------
+
+-- Takes a hand and creates the best hand from it
 bestHand :: Hand -> BestHand
 bestHand = maximum . possibleHands
     where possibleHands h = catMaybes $ handMatchers <*> [h]
@@ -88,10 +111,6 @@ handMatchers = [highCardMatcher,
                 straightFlushMatcher,
                 royalFlushMatcher]
 
-
-rank :: Card -> Rank
-rank (Card r _) = r
-
 -- Sorts a hand into descending order
 descendingHand :: Hand -> Hand
 descendingHand = sortBy (flip compare)
@@ -100,12 +119,9 @@ descendingHand = sortBy (flip compare)
 withoutRank :: Rank -> Hand -> Hand
 withoutRank r = filter (\c -> rank c /= r)
 
--- Given a Hand, extracts the Ranks of the Cards in the Hand, in decreasing order
-sortedRanks :: Hand -> [Rank]
-sortedRanks h = rank <$> sortBy (flip compare) h
 
-ranksAppearingExactlyNTimes :: Int -> [Rank] -> [Rank]
-ranksAppearingExactlyNTimes n = map head . filter (\x -> length x == n) . group
+
+
 
 -- Hand Matchers for the various possible BestHands
 
@@ -115,6 +131,13 @@ highCardMatcher h =
         highestRank = rank . head $ descHand in
         Just $ HighCard highestRank (withoutRank highestRank descHand)
 
+
+
+
+
+
+ranksAppearingExactlyNTimes :: Int -> [Rank] -> [Rank]
+ranksAppearingExactlyNTimes n = map head . filter (\x -> length x == n) . group
 
 -- Helper method to find 'n-of-a-kind' - extracts the common logic used for
 -- matching `OnePair`, `ThreeOfAKind` and `FourOfAKind`.  The second argument is
@@ -131,6 +154,16 @@ nOfAKindMatcher n f h
 onePairMatcher :: Hand -> Maybe BestHand
 onePairMatcher = nOfAKindMatcher 2 OnePair
 
+threeOfAKindMatcher :: Hand -> Maybe BestHand
+threeOfAKindMatcher = nOfAKindMatcher 3 ThreeOfAKind
+
+fourOfAKindMatcher :: Hand -> Maybe BestHand
+fourOfAKindMatcher = nOfAKindMatcher 4 FourOfAKind
+
+
+
+
+
 -- To match two pairs, we first match one pair, then attempt to match another
 -- pair from the remaining Kickers
 twoPairsMatcher :: Hand -> Maybe BestHand
@@ -139,13 +172,11 @@ twoPairsMatcher h = do
     OnePair l k' <- onePairMatcher k
     return $ TwoPairs h l k'
 
-threeOfAKindMatcher :: Hand -> Maybe BestHand
-threeOfAKindMatcher = nOfAKindMatcher 3 ThreeOfAKind
-
 straightMatcher :: Hand -> Maybe BestHand
 straightMatcher h
     | allPredecessors (sortedRanks h) = Just $ Straight (head (sortedRanks h))
     | otherwise = Nothing
+    where sortedRanks h = rank <$> sortBy (flip compare) h
 
 flushMatcher :: Hand -> Maybe BestHand
 flushMatcher h
@@ -153,30 +184,39 @@ flushMatcher h
     | otherwise = Nothing
     where sameSuit (Card _ s) (Card _ s') = s == s'
 
+-- A `FullHouse` is a `ThreeOfAKind` and a `OnePair`
 fullHouseMatcher :: Hand -> Maybe BestHand
 fullHouseMatcher h = do
     ThreeOfAKind t _ <- threeOfAKindMatcher h
     OnePair p _ <- onePairMatcher h
     return $ FullHouse t p
 
-fourOfAKindMatcher :: Hand -> Maybe BestHand
-fourOfAKindMatcher = nOfAKindMatcher 4 FourOfAKind
-
+-- A `StraightFlush` is a `Flush` and a `Straight`
 straightFlushMatcher :: Hand -> Maybe BestHand
 straightFlushMatcher h = do
     flushMatcher h
     Straight r <- straightMatcher h
     return $ StraightFlush r
 
+-- A `RoyalFlush` is a `StraightFlush` which ends in an `Ace`
 royalFlushMatcher :: Hand -> Maybe BestHand
 royalFlushMatcher h = do
     StraightFlush r <- straightFlushMatcher h
     if r == Ace then Just RoyalFlush
                 else Nothing
 
+
+---------------------------------------
+-- Data Model for Rounds and winners --
+---------------------------------------
+
+-- Here we just assume there are two players
 data Round = Round Hand Hand deriving (Eq, Show)
 
-data Winner = Player1 | Player2 | Draw deriving (Eq, Show)
+data Winner = Player1
+            | Player2
+            | Draw
+            deriving (Eq, Show)
 
 winner :: Round -> Winner
 winner (Round h1 h2) =
