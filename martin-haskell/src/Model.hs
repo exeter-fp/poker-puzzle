@@ -5,9 +5,9 @@ import Data.Maybe (catMaybes)
 import Control.Applicative ((<$>))
 import Util
 
-------------------------------------------
--- Basic data model for Cards and Hands --
-------------------------------------------
+------------------------------------
+-- Data model for Cards and Hands --
+------------------------------------
 
 -- Suits don't have an `Ord` instance, as there's no notion of Suit order
 data Suit =
@@ -84,8 +84,6 @@ type TwoRank = Rank
 
 
 
-
-
 -----------------------------------------------------------------------
 -- Functions to determine the best possible hand from a given `Hand` --
 -----------------------------------------------------------------------
@@ -115,24 +113,22 @@ handMatchers = [highCardMatcher,
 descendingHand :: Hand -> Hand
 descendingHand = sortBy (flip compare)
 
--- Removes all cards of rank `r` from a hand, leaving the remainders
+-- Removes all cards of rank `r` from a hand
 withoutRank :: Rank -> Hand -> Hand
 withoutRank r = filter (\c -> rank c /= r)
 
 
 
 
-
--- Hand Matchers for the various possible BestHands
+--------------------------------------------------------
+-- Hand Matchers for the various possible `BestHand`s --
+--------------------------------------------------------
 
 highCardMatcher :: Hand -> Maybe BestHand
 highCardMatcher h =
     let descHand = descendingHand h
         highestRank = rank . head $ descHand in
         Just $ HighCard highestRank (withoutRank highestRank descHand)
-
-
-
 
 
 
@@ -162,22 +158,23 @@ fourOfAKindMatcher = nOfAKindMatcher 4 FourOfAKind
 
 
 
-
-
 -- To match two pairs, we first match one pair, then attempt to match another
--- pair from the remaining Kickers
+-- pair from the remaining cards
 twoPairsMatcher :: Hand -> Maybe BestHand
 twoPairsMatcher h = do
     OnePair h k <- onePairMatcher h
     OnePair l k' <- onePairMatcher k
     return $ TwoPairs h l k'
 
+-- A `Straight` is a hand where each rank in descending order is a `pred`
+-- of the previous one
 straightMatcher :: Hand -> Maybe BestHand
 straightMatcher h
     | allPredecessors (sortedRanks h) = Just $ Straight (head (sortedRanks h))
     | otherwise = Nothing
     where sortedRanks h = rank <$> sortBy (flip compare) h
 
+-- A `Flush` 
 flushMatcher :: Hand -> Maybe BestHand
 flushMatcher h
     | length (groupBy sameSuit h) == 1 = Just Flush
@@ -207,7 +204,7 @@ royalFlushMatcher h = do
 
 
 ---------------------------------------
--- Data Model for Rounds and winners --
+-- Data Model for Rounds and Winners --
 ---------------------------------------
 
 -- Here we just assume there are two players
