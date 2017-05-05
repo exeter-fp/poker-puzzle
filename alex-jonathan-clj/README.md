@@ -1,14 +1,7 @@
 # p54
 
-A Clojure library designed to ... well, that part is up to you.
+## poker puzzle
 
-## Usage
-
-FIXME
-
-## License
-
-Copyright © 2017 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+basic approach is to make use of the character values,
+and build up a score vector where the left most elements take precedence
+done in such a way that we don't have to deal with ties
