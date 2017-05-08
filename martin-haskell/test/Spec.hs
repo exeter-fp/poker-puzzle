@@ -87,8 +87,8 @@ player1Wins = do
     input <- readFile "../poker.txt"
     let rounds = mapMaybe parseRound (lines input)
         winners = map winner rounds
-        p1Wins = length (filter (== Player1) winners) in
-        return p1Wins
+        p1Wins = length (filter (== Player1) winners)
+    return p1Wins
 
 testPlayer1Wins = describe "Correct puzzle answer" $
     it "Player 1 wins 376 hands using sample data" $ do
