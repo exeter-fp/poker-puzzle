@@ -1,15 +1,15 @@
 module Parsing where
 
-import Data.List.Split (splitOn)
-import Data.Maybe (mapMaybe)
-import Model
+import           Data.List.Split (splitOn)
+import           Data.Maybe      (mapMaybe)
+import           Model
 
 parseRound :: String -> Maybe Round
 parseRound s =
     let cards = mapMaybe parseCard (splitOn " " s)
     in case length cards of
            10 -> Just $ Round (take 5 cards) (drop 5 cards)
-           _ -> Nothing
+           _  -> Nothing
 
 parseRank :: String -> Maybe Rank
 parseRank s =
@@ -27,7 +27,7 @@ parseRank s =
         'Q' -> Just Queen
         'K' -> Just King
         'A' -> Just Ace
-        _ -> Nothing
+        _   -> Nothing
 
 parseSuit :: String -> Maybe Suit
 parseSuit s =
@@ -36,7 +36,7 @@ parseSuit s =
         'C' -> Just Clubs
         'D' -> Just Diamonds
         'S' -> Just Spades
-        _ -> Nothing
+        _   -> Nothing
 
 parseCard :: String -> Maybe Card
 parseCard s =

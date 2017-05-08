@@ -1,8 +1,8 @@
 module Main where
 
-import Data.Maybe (mapMaybe)
-import Model
-import Parsing
+import           Data.Maybe (mapMaybe)
+import           Model
+import           Parsing
 
 main :: IO ()
 main = do

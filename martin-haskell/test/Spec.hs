@@ -1,7 +1,7 @@
-import Test.Hspec
-import Model
-import Parsing
-import Data.Maybe (mapMaybe)
+import           Data.Maybe (mapMaybe)
+import           Model
+import           Parsing
+import           Test.Hspec
 
 testHand1 = describe "Hand 1" $
                 it "Pair of Eights beats Pair of Fives" $

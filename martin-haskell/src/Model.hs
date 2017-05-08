@@ -1,9 +1,9 @@
 module Model where
 
-import Control.Applicative ((<$>))
-import Data.List (group, groupBy, sortBy)
-import Data.Maybe (catMaybes)
-import Util
+import           Control.Applicative ((<$>))
+import           Data.List           (group, groupBy, sortBy)
+import           Data.Maybe          (catMaybes)
+import           Util
 
 ------------------------------------
 -- Data model for Cards and Hands --
@@ -176,7 +176,7 @@ straightMatcher h
   where
     descendingRanks = rank <$> descendingHand h
 
--- A `Flush` 
+-- A `Flush`
 flushMatcher :: Hand -> Maybe BestHand
 flushMatcher h
     | length (groupBy sameSuit h) == 1 = Just Flush
