@@ -3,7 +3,7 @@
 module PokerPuzzle where
   
 import Data.List (sortBy, group, find, nub)
-import Data.Maybe (isJust, fromJust)
+import Data.Maybe (isJust, fromJust, catMaybes)
 import Control.Monad (guard)
 import Model
 
@@ -150,10 +150,8 @@ pokerResult (Hand cardsInHand) =
       , onePair groupedHand
       , Just $ highCard sortedHand
       ]
-      
-    best = find isJust options
   in
-    fromJust $ fromJust best
+    head $ catMaybes options
     
     
 isPlayer1Winner :: (Hand, Hand) -> Bool
