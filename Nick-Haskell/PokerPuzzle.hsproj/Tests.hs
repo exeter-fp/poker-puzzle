@@ -29,5 +29,7 @@ test3 = TestCase $ assertBool "player 1 looses" $ not $ isPlayer1Winner $ parseL
 test4 = TestCase $ assertBool "player 1 wins" $ isPlayer1Winner $ parseLine "4D 6S 9H QH QC 3D 6D 7H QD QS"
 test5 = TestCase $ assertBool "player 1 wins" $ isPlayer1Winner $ parseLine "2H 2D 4C 4D 4S 3C 3D 3S 9S 9D"
 
+test6 = TestCase $ assertBool "player 1 wins" $ isPlayer1Winner $ parseLine "5H KS 9C 7D 9H 8D 3S 5D 5C AH"
 
-tests = TestList [test1, test2, test3, test4, test5]
+
+tests = TestList [test1, test2, test3, test4, test5, test6]
