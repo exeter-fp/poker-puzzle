@@ -17,8 +17,7 @@ data Suit
     deriving (Eq, Show)
 
 data Rank
-    = One
-    | Two
+    = Two
     | Three
     | Four
     | Five
