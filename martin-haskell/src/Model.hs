@@ -1,10 +1,10 @@
 module Model where
 
 import           Control.Applicative ((<$>))
+import           Control.Monad       (guard)
 import           Data.List           (group, groupBy, sortBy)
 import           Data.Maybe          (catMaybes)
 import           Util
-
 ------------------------------------
 -- Data model for Cards and Hands --
 ------------------------------------
@@ -140,9 +140,8 @@ nOfAKindMatcher :: Int
                 -> (Rank -> Kickers -> BestHand)
                 -> Hand
                 -> Maybe BestHand
-nOfAKindMatcher n cons h
-    | not (null groups) = Just (cons highestRank kickers)
-    | otherwise = Nothing
+nOfAKindMatcher n cons h =
+    cons highestRank kickers <$ guard (not (null groups))
   where
     descHand = descendingHand h
     groups = ranksAppearingExactlyNTimes n $ rank <$> descHand
@@ -169,17 +168,15 @@ twoPairsMatcher h = do
 -- A `Straight` is a hand where each rank in descending order is a `pred`
 -- of the previous one
 straightMatcher :: Hand -> Maybe BestHand
-straightMatcher h
-    | allPredecessors descendingRanks = Just $ Straight (head descendingRanks)
-    | otherwise = Nothing
+straightMatcher h =
+    Straight (head descendingRanks) <$ guard (allPredecessors descendingRanks)
   where
     descendingRanks = rank <$> descendingHand h
 
 -- A `Flush`
 flushMatcher :: Hand -> Maybe BestHand
-flushMatcher h
-    | length (groupBy sameSuit h) == 1 = Just Flush
-    | otherwise = Nothing
+flushMatcher h =
+    Flush <$ guard (length (groupBy sameSuit h) == 1)
   where
     sameSuit (Card _ s) (Card _ s') = s == s'
 
@@ -201,9 +198,7 @@ straightFlushMatcher h = do
 royalFlushMatcher :: Hand -> Maybe BestHand
 royalFlushMatcher h = do
     StraightFlush r <- straightFlushMatcher h
-    if r == Ace
-        then Just RoyalFlush
-        else Nothing
+    RoyalFlush <$ guard (r == Ace)
 
 ---------------------------------------
 -- Data Model for Rounds and Winners --
