@@ -6,8 +6,8 @@ license: AllRightsReserved
 stability: experimental
 data-files:
     p054_poker.txt
-x-ghc-framework-version: 7.10.3-6.29-1
-x-last-ide-version: HfM1.4.0
+x-ghc-framework-version: 8.0.2-8.9-3
+x-last-ide-version: HfM1.5.1
 Executable PokerPuzzle
   main-is: Main.hs
   buildable: True
@@ -18,7 +18,7 @@ Executable PokerPuzzle
       text -any,
       hspec -any
   other-modules:
-      Tests
       Model
       PokerPuzzle
       Parsing
+      Tests
